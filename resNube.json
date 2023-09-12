@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "nombre":"Jaqueline",
+        "descripción": "Compre estos en amazon y salieron pesimos y muy caros, aqui estan mas baratos y mejor calidad!",
+        "calificacion":5
+        
+    },
+    {
+        "id": 2,
+        "nombre":"Elizabeth",
+        "descripción": "Estan preciosos!!!",
+        "calificacion":5
+        
+    },
+    {
+        "id": 3,
+        "nombre":"Jazmin",
+    "descripción": "Se ven adorables, muy comodos, soy fan de las nubes",
+    "calificacion":5
+    }
+]

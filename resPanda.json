@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "nombre":"Susana",
+        "descripción": "pense que era de mejor calidad, me arrepiento de la compra",
+        "calificacion":1
+        
+    },
+    {
+        "id": 2,
+        "nombre":"Alejandro",
+        "descripción": "Bastante lindos, le encantaron a mi novia",
+        "calificacion":5
+        
+    },
+    {
+        "id": 3,
+        "nombre":"Andrea",
+    "descripción": "se despintan con el tiempo, pff, mi peor compra ",
+    "calificacion":1
+    }
+]

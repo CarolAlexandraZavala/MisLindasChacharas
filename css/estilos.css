@@ -1,0 +1,189 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+.login{
+	color: white;
+}
+body {
+	background: #f2f2f2;
+	font-family: 'Roboto', sans-serif;
+}
+
+p {
+	margin-bottom: 20px;
+	line-height: 150%;
+}
+
+main {
+	margin: 20px auto;
+	max-width: 1000px;
+	background: #fff;
+	min-height: 80vh;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.aviso-cookies {
+	display: none;
+	background: #fff;
+	padding: 20px;
+	width: calc(100% - 40px);
+	max-width: 300px;
+	line-height: 150%;
+	border-radius: 10px;
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	z-index: 100;
+	padding-top: 60px;
+	box-shadow: 0px 2px 20px 10px rgba(222,222,222,.25);
+	text-align: center;
+}
+
+.aviso-cookies.activo {
+	display: block;
+}
+
+.aviso-cookies .galleta {
+	max-width: 100px;
+	position: absolute;
+	top: -50px;
+	left: calc(50% - 50px);
+}
+
+.aviso-cookies .titulo,
+.aviso-cookies .parrafo {
+	margin-bottom: 15px;
+}
+
+.aviso-cookies .boton {
+	width: 100%;
+	background: #595959;
+	border: none;
+	color: #fff;
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+	padding: 15px 20px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: .3s ease all;
+	border-radius: 5px;
+	margin-bottom: 15px;
+	font-size: 14px;
+}
+
+.aviso-cookies .boton:hover {
+	background: #000;
+}
+
+.aviso-cookies .enlace {
+	color: #4DBFFF;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.aviso-cookies .enlace:hover {
+	text-decoration: underline;
+}
+
+.fondo-aviso-cookies {
+	display: none;
+	background: rgba(0,0,0,.20);
+	position: fixed;
+	z-index: 99;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+}
+
+.fondo-aviso-cookies.activo {
+	display: block;
+}
+
+#espacio {
+
+	margin-top: 100px;
+
+
+  }
+
+  #color {
+	background-color: whitesmoke;
+	margin-left: 8%;
+	margin-right: 8%;
+	padding-bottom: 50px;
+	;
+  }
+
+  #izquierda {
+
+	width: 30%;
+	float: left;
+	padding-right: 30px;
+  }
+
+  #derecha {
+
+	width: 65%;
+	float: left;
+  }
+
+  #imagenes {
+
+	height: 300px;
+	margin-left: 5%;
+	margin-right: 5%;
+
+  }
+
+  #estrella {
+	font-size: 30px;
+	color: yellow;
+
+  }
+
+  #estre {
+	font-size: 30px;
+
+
+  }
+
+  #tablaPersonas {
+
+	margin-top: 20px;
+	;
+  }
+
+  #espacio {
+
+	margin-top: 100px;
+
+
+  }
+
+  #imagenes {
+	width: 250px;
+	height: 300px;
+	margin-left: 20%;
+	margin-right: 20%;
+
+  }
+
+  #diseño {
+	font-size: 15px;
+	margin-left: 20px;
+	text-align: center;
+	padding-bottom: 20px;
+	width: 300px;
+	height: 400px;
+
+  }
+
+  #tablaPersonas {
+
+	margin-top: 20px;
+	;
+  }

@@ -1,0 +1,61 @@
+nav span i{
+    color: #FFFF;
+    font-size: 2.7rem;
+    cursor: pointer;
+}
+aside{
+    width: 260px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: hidden;
+    margin-top: 59px;
+    transition: 0.5s;
+}
+
+aside:hover{
+    overflow-y: auto;
+}
+.desplegar{
+    transform: translateX(-100%);
+}
+
+aside::-webkit-scrollbar{
+    width: 8px;
+}
+
+aside::-webkit-scrollbar-thumb{
+    background-color: #909090;
+    border-radius: 5px;
+}
+
+.container-svg{
+    border-bottom: 1px solid;
+    padding: 10px;
+    color: white;
+}
+
+.container-svg div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.container-svg div span{
+    margin-left: 15px;
+    font-size: 1.38rem;
+    font-weight: 500;
+}
+
+.row-new{
+    float: right;
+}
+h1{
+    text-align: center;
+}
+a{
+    color: white;
+    
+}

@@ -1,0 +1,70 @@
+<!--Formulario-->
+<div class="centrarAll">
+    <div class="container">
+        <div class="title">Insertar</div>
+        <form class="form" id="insertForm">
+            <div class="user-details">
+                <div class="input-box">
+                    <span class="details">Nombre del producto</span>
+                    <input type="text" placeholder="Inserta el nombre del producto" id="nombre">
+                </div>
+                <div class="input-box">
+                    <span class="details">Cantidad</span>
+                    <input type="text" placeholder="Inserta la cantidad del producto" id="cantidad">
+                </div>
+                <div class="input-box">
+                    <span class="details">Descripción</span>
+                    <input type="text" placeholder="Inserta la descripción del producto" id="descripcion">
+                </div>
+                <div class="input-box">
+                    <span class="details">Precio</span>
+                    <input type="text" placeholder="Inserta el precio del producto" id="precio">
+                </div>
+                <div class="input-box">
+                    <span class="details">Imagen</span>
+                    <input type="text" placeholder="Inserta el URL de la imagen" id="imagen">
+                </div>
+            </div>
+            <div class="button">
+                <input type="submit" value="Insertar">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    const insertForm = document.getElementById('insertForm');
+    insertForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const cantidad = document.getElementById('cantidad').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const precio = document.getElementById('precio').value;
+        const imagen = document.getElementById('imagen').value;
+
+        // Objeto con los datos a enviar
+        const data = {
+            nombre: nombre,
+            cantidad: cantidad,
+            descripcion: descripcion,
+            precio: precio,
+            imagen: imagen
+        };
+
+        // Realizar solicitud AJAX para enviar los datos al servidor
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/insertar', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                // Redirigir a otra página después de la inserción exitosa
+                window.location.href = "index_admin";
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    });
+</script>
