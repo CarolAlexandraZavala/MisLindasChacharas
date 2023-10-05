@@ -17,139 +17,188 @@
         </a>
     </header>
 
-    <section>
-        <div class="container py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10">
+                <br />
+                <button class="btn btn-secondary" data-toggle="tooltip" title="Nuevo Producto" onclick="window.location.href = 'Registro.html';">Agregar
+                    nuevo</button>
 
-            <table class="table align-middle mb-8 bg-white">
-                <thead class="bg-light">
-                    <tr>
-                        <th>Nombres</th>
-                        <th>Primer apellido</th>
-                        <th>Segundo apellido</th>
-                        <th>Correo</th>
-                        <th>Contraseña</th>
-                        <th>Cuenta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3">
-                                    <p class="fw-bold mb-1">Susana</p>
-                                </div>
+                <!--Modal-->
+                <div id="modalEdit" class="modal fade" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark text-light">
+                                <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Hernández</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Guerrero</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">su.gro.hdz@hotmail.com</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">susana123</p>
-                        </td>
-                        <td>Premium</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3">
-                                    <p class="fw-bold mb-1">Carol Alexandra</p>
+                            <form>
+                                <div class="modal-body">
+                                    <input id="id" type="hidden">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input id="name" type="text" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Apellido</label>
+                                        <input id="lastname" type="text" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Correo</label>
+                                        <input id="email" type="email" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cuenta</label>
+                                        <input id="account" type="text" class="form-control" required>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Sanchez</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Zavala</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">carolzavala345@gmail.com</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">carol123</p>
-                        </td>
-                        <td>Premium</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3">
-                                    <p class="fw-bold mb-1">Erick Alfredo</p>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        tabindex="2">Cancelar</button>
+                                    <button type="submit" id="btnGuardar" class="btn btn-success"
+                                        translate="1">Guardar</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Aguilar</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Ramirez</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">19150350@aguascalientes.tecnm.mx</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">erick123</p>
-                        </td>
-                        <td>Premium</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3">
-                                    <p class="fw-bold mb-1">Lauro Manuel</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Cárdenas</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Herrera</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Lauro@gmail.com</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">lauro123</p>
-                        </td>
-                        <td >Premium</td>
-                    </tr>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <br />
 
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3">
-                                    <p class="fw-bold mb-1">María Areli</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Jimenez</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Romero</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">MaríaAreli@gmail.com</p>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Contra123</p>
-                        </td>
-                        <td >Normal</td>
-                    </tr>
-                </tbody>
-            </table>
+                <div class="tablita">
+                    <table id="tablaUsuarios" class="table table-bordered">
+                        <thead>
+                            <tr class="bg-dark text-light">
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellidos</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Cuenta</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyUsuarios">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 
-    <script src="js/bootstrap.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.4/dist/sweetalert2.all.min.js"></script>
 
-</html>
+    <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
+            authDomain: "chacharas-c6ec7.firebaseapp.com",
+            databaseURL: "https://chacharas-c6ec7-default-rtdb.firebaseio.com",
+            projectId: "chacharas-c6ec7",
+            storageBucket: "chacharas-c6ec7.appspot.com",
+            messagingSenderId: "707214837038",
+            appId: "1:707214837038:web:fa947fe910e5ef905ae6bf",
+            measurementId: "G-R340PVF1GK"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        coleccionUsuarios = db.ref().child('users');
+        bodyUsuarios = $('#bodyUsuarios').val();
+        //console.log(bodyProductos);  
+        $('form').submit(function (e) {
+            e.preventDefault();
+            let id = $('#id').val();
+            let name = $('#name').val();
+            let lastName = $('#lastname').val();
+            let email = $('#email').val();
+            let account = $('#account').val();
+            let idFirebase = id;
+            if (idFirebase == '') {
+                idFirebase = coleccionUsuarios.push().key;
+            };
+            data = { name: name, lastName: lastName, email: email, account: account };
+            actualizacionData = {};
+            actualizacionData[`/${idFirebase}`] = data;
+            coleccionUsuarios.update(actualizacionData);
+            id = '';
+            $('form').trigger('reset');
+            $('#modalEdit').modal('hide');
+        });
+        const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
+        const iconoBorrar = '<svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
+        function mostrarUsuarios({ name, lastName, email, account }) {
+            return `
+    <td>${name}</td>
+    <td>${lastName}</td>
+    <td>${email}</td>
+    <td>${account}</td>
+    <td><button class="btnEditar btn btn-secondary" data-toggle="tooltip" title="Editar">${iconoEditar}</button><button class="btnBorrar btn btn-danger" data-toggle="tooltip" title="Borrar">${iconoBorrar}</button></td>
+    `
+        };
+        coleccionUsuarios.on('child_added', data => {
+            let tr = document.createElement('tr')
+            tr.id = data.key
+            tr.innerHTML = mostrarUsuarios(data.val())
+            document.getElementById('bodyUsuarios').appendChild(tr)
+        });
+        coleccionUsuarios.on('child_changed', data => {
+            let nodoEditado = document.getElementById(data.key)
+            nodoEditado.innerHTML = mostrarUsuarios(data.val())
+        });
+        coleccionUsuarios.on('child_removed', data => {
+            let nodoEditado = document.getElementById(data.key)
+            document.getElementById('bodyUsuarios').removeChild(nodoEditado)
+        });
+        $('#btnNuevo').click(function () {
+            $('#id').val('');
+            $('#name').val('');
+            $('#lastname').val('');
+            $('#email').val('');
+            $('#account').val('');
+            $('form').trigger('reset');
+            $('#modalEdit').modal('show');
+        });
+        $('#tablaUsuarios').on('click', '.btnEditar', function () {
+            let id = $(this).closest('tr').attr('id');
+            let name = $(this).closest('tr').find('td:eq(0)').text();
+            let lastname = $(this).closest('tr').find('td:eq(1)').text();
+            let email = $(this).closest('tr').find('td:eq(2)').text();
+            let account = $(this).closest('tr').find('td:eq(3)').text();
+            $('#id').val(id);
+            $('#name').val(name);
+            $('#lastname').val(lastname);
+            $('#email').val(email);
+            $('#account').val(account);
+            $('#modalEdit').modal('show');
+        });
+        $('#tablaUsuarios').on('click', '.btnBorrar', function () {
+            Swal.fire({
+                title: '¿Está seguro de eliminar el usuario?',
+                text: "¡Está operación no se puede revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Borrar'
+            }).then((result) => {
+                if (result.value) {
+                    let id = $(this).closest('tr').attr('id'); 
+                    db.ref(`users/${id}`).remove()    
+                    Swal.fire('¡Eliminado!', 'El usuario ha sido eliminado.', 'success')
+                }
+            })
+        });
+
+    </script>
