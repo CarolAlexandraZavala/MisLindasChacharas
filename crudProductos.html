@@ -96,7 +96,7 @@
         </a>
         <a>
             <center>
-                <h5 class="mt-1 title text-white">CRUD</h5>
+                <h5 class="mt-1 title text-white">PRODUCTOS</h5>
             </center>
         </a>
         <nav>
@@ -107,7 +107,7 @@
             <div class="col-lg-10">
                 <br />
                 <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Producto">Agregar
-                    nuevo</button>
+                    nuevo Producto</button>
                 <!--Modal-->
                 <div id="modalAltaEdicion" class="modal fade" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,6 +125,10 @@
                                     <div class="form-group">
                                         <label>Nombre del producto</label>
                                         <input id="nombre" type="text" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Categoria</label>
+                                        <input id="categoria" type="text" class="form-control" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Descripción</label>
@@ -146,6 +150,22 @@
                                         <label>Imagen</label>
                                         <input type="file" id="imageInput" class="form-control" required>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Altura</label>
+                                        <input id="altura" type="number" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ancho</label>
+                                        <input id="ancho" type="number" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Longitud</label>
+                                        <input id="longitud" type="number" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Peso</label>
+                                        <input id="peso" type="number" class="form-control" required>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -164,6 +184,7 @@
                         <thead>
                             <tr class="bg-dark text-light">
                                 <th scope="col">Nombre</th>
+                                <th scope="col">Categoria</th>
                                 <th scope="col">Descripción</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Precio</th>
@@ -218,6 +239,7 @@
                 e.preventDefault();
                 let id = $('#id').val();
                 let nombre = $('#nombre').val();
+                let categoria = $('#categoria').val();
                 let descripcion = $('#descripcion').val();
                 let cantidad = $('#cantidad').val();
                 let precio = $('#precio').val();
@@ -238,7 +260,7 @@
                     // Obtener la URL de la imagen subida
                     imagenRef.getDownloadURL().then(function (url) {
                         var imagenURL = url;
-                        data = { nombre: nombre, descripcion: descripcion, cantidad: cantidad, precio: precio, paypal: paypal, imagen: imagenURL };
+                        data = { nombre: nombre, categoria: categoria, descripcion: descripcion, cantidad: cantidad, precio: precio, paypal: paypal, imagen: imagenURL };
                         actualizacionData = {};
                         actualizacionData[`/${idFirebase}`] = data;
                         coleccionProductos.update(actualizacionData);
@@ -257,9 +279,10 @@
         const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
         const iconoBorrar = '<svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
         
-        function mostrarProductos({ nombre, descripcion, cantidad, precio, paypal, imagen }) {
+        function mostrarProductos({ nombre, categoria, descripcion, cantidad, precio, paypal, imagen }) {
                 return `
     <td>${nombre}</td>
+    <td>${categoria}</td>
     <td>${descripcion}</td>
     <td>${cantidad}</td>
     <td>${precio}</td>
@@ -285,6 +308,7 @@
             $('#btnNuevo').click(function () {
                 $('#id').val('');
                 $('#nombre').val('');
+                $('#categoria').val('');
                 $('#descripcion').val('');
                 $('#cantidad').val('');
                 $('#precio').val('');
@@ -296,13 +320,15 @@
             $('#tablaProductos').on('click', '.btnEditar', function () {
                 let id = $(this).closest('tr').attr('id');
                 let nombre = $(this).closest('tr').find('td:eq(0)').text();
-                let descripcion = $(this).closest('tr').find('td:eq(1)').text();
-                let cantidad = $(this).closest('tr').find('td:eq(2)').text();
-                let precio = $(this).closest('tr').find('td:eq(3)').text();
-                let paypal = $(this).closest('tr').find('td:eq(4)').text();
-                let imagen = $(this).closest('tr').find('td:eq(5)').text();
+                let categoria = $(this).closest('tr').find('td:eq(1)').text();
+                let descripcion = $(this).closest('tr').find('td:eq(2)').text();
+                let cantidad = $(this).closest('tr').find('td:eq(3)').text();
+                let precio = $(this).closest('tr').find('td:eq(4)').text();
+                let paypal = $(this).closest('tr').find('td:eq(5)').text();
+                let imagen = $(this).closest('tr').find('td:eq(6)').text();
                 $('#id').val(id);
                 $('#nombre').val(nombre);
+                $('#categoria').val(categoria);
                 $('#descripcion').val(descripcion);
                 $('#cantidad').val(cantidad);
                 $('#precio').val(precio);
