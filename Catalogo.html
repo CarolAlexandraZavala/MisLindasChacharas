@@ -201,6 +201,9 @@
           <div id="catalogoProductos" class="row"></div>
         </div>
       </section>
+        <aside class="col-sm-4">
+          <table id="data-table"></table>
+        </aside>
     </div>
 
   </div>
@@ -249,6 +252,101 @@
     src="https://www.paypal.com/sdk/js?client-id=AWp5XLwAVcsjPx07ujiuwdrF71xDEZLA6wZ9BJbLND0feaTnYRn8RlRqdrkhqAf14chFoPzkuB6Odb3U"></script>
 
   <script>
+  
+  function getData(productoId) {
+            // Hacer una solicitud fetch a la ruta del servidor
+            fetch(`/api/producto/${productoId}`)
+                .then(response => {
+                    // Verificar si la solicitud fue exitosa
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    // Convertir la respuesta a JSON
+                    return response.json();
+                })
+                .then(data => {
+                    // Manejar los detalles del producto aquí (puedes mostrarlos en un modal, por ejemplo)
+                    console.log(data);
+                    alert(`Detalles del producto:\nNombre: ${data.nombre}\nAltura: ${data.altura}\nAncho: ${data.ancho}\nLongitud: ${data.longitud}\nPeso: ${data.peso}`);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+  function getData() {
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Datos recibidos:', data);
+            // Llamamos a createTable solo con la propiedad data
+            createTable(data);
+        })
+        .catch(error => console.error('Error:', error));
+}    
+function createTable(data) {
+    console.log('Creando la tabla con datos:', data);
+
+    // Obtener el elemento de la tabla
+    var table = document.getElementById('data-table');
+
+    // Limpiar la tabla si ya contiene datos anteriores
+    table.innerHTML = '';
+
+    // Crear la fila de encabezado (cabecera)
+    var headerRow = table.insertRow(0);
+    for (var key in data) {
+        var headerCell = headerRow.insertCell(-1);
+        headerCell.innerText = key;
+    }
+    // Crear la fila de datos
+    var dataRow = table.insertRow(-1);
+    for (var key in data) {
+        var dataCell = dataRow.insertCell(-1);
+        dataCell.innerText = data[key];
+    }
+
+    // Función para agregar al carritofunction addToCart(product) {
+    // Configuración del objeto del botón de PayPal
+    var paypalButton = {
+        business: 'TU_ID_DE_VENDEDOR_PAYPAL',
+        item_name: product.name,
+        amount: product.amount,
+        currency_code: 'USD',
+        return: 'URL_DE_RETORNO',
+        cancel_return: 'URL_DE_CANCELACION',
+        image_url: product.image_url,
+        custom: product.custom
+    };
+
+    // Crear el formulario de PayPal
+    var form = document.createElement('form');
+    form.action = 'https://www.paypal.com/cgi-bin/webscr';
+    form.method = 'post';
+
+    // Agregar campos al formulario
+    for (var key in paypalButton) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = paypalButton[key];
+        form.appendChild(input);
+    }
+
+    // Agregar el formulario al cuerpo del documento
+    document.body.appendChild(form);
+
+    // Enviar el formulario para redirigir al usuario a PayPal
+    form.submit();
+
+    // Crear una celda adicional para el botón "Agregar al Carrito"
+    var buttonCell = dataRow.insertCell(-1);
+    var addButton = document.createElement('button');
+    addButton.innerText = 'Agregar al Carrito';
+    addButton.onclick = function () {
+        addToCart(data['amount']);  // Pasa solo el valor 'amount' a la función addToCart
+    };
+    buttonCell.appendChild(addButton);
+}
     var firebaseConfig = {
       apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
       authDomain: "chacharas-c6ec7.firebaseapp.com",
@@ -288,6 +386,7 @@
                 <h5>${producto.nombre}</h5>
                 <p class="card-price" data-precio="35.00">$${producto.precio}</p>
               </div>
+              <button onclick="getData('${producto.id}')">Obtener cotizacion</button>
               <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                 <input type="hidden" name="cmd" value="_s-xclick" />
                 <input type="hidden" name="hosted_button_id" value=${producto.paypal} />
