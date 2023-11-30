@@ -252,7 +252,60 @@
     src="https://www.paypal.com/sdk/js?client-id=AWp5XLwAVcsjPx07ujiuwdrF71xDEZLA6wZ9BJbLND0feaTnYRn8RlRqdrkhqAf14chFoPzkuB6Odb3U"></script>
 
   <script>
-  
+
+    var firebaseConfig = {
+      apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
+      authDomain: "chacharas-c6ec7.firebaseapp.com",
+      databaseURL: "https://chacharas-c6ec7-default-rtdb.firebaseio.com",
+      projectId: "chacharas-c6ec7",
+      storageBucket: "chacharas-c6ec7.appspot.com",
+      messagingSenderId: "707214837038",
+      appId: "1:707214837038:web:fa947fe910e5ef905ae6bf",
+      measurementId: "G-R340PVF1GK"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const productosRef = db.ref('productos');
+    productosRef.once('value', function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var producto = childSnapshot.val();
+        // Aquí puedes realizar alguna acción con los datos del producto
+        console.log(producto);
+      });
+    });
+
+    const catalogoProductos = document.getElementById('catalogoProductos');
+    productosRef.once('value', function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var producto = childSnapshot.val();
+
+        // Genera el HTML correspondiente para cada producto
+        var productoHTML = `
+    <div class="col-12 col-sm-6 col-md-4">
+          <div class="card mb-4 ">
+            <div id="diseño">
+              <div id="tit">
+                <img src=${producto.imagen} style="width: 150px;" title=${producto.nombre} alt=${producto.nombre}>
+                <br>
+                <h5>${producto.nombre}</h5>
+                <p class="card-price" data-precio="35.00">$${producto.precio}</p>
+              </div>
+              <button onclick="getData('${producto.id}')">Obtener cotizacion</button>
+              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick" />
+                <input type="hidden" name="hosted_button_id" value=${producto.paypal} />
+                <input type="hidden" name="currency_code" value="MXN" />
+                <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_buynow_SM.gif" border="0" name="submit" title="PayPal es una forma segura y fácil de pagar en línea." alt="Comprar ahora" />
+            </form>
+              <a href="${producto.nombre}.html" title="aretegirasol"><button class="btn btn-sm btn-outline-secondary" id="cyn">Ir</button></a>
+            </div>
+          </div>
+        </div>
+    `;
+        catalogoProductos.innerHTML += productoHTML;
+          
   function getData(productoId) {
             // Hacer una solicitud fetch a la ruta del servidor
             fetch(`/api/producto/${productoId}`)
@@ -347,58 +400,6 @@ function createTable(data) {
     };
     buttonCell.appendChild(addButton);
 }
-    var firebaseConfig = {
-      apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
-      authDomain: "chacharas-c6ec7.firebaseapp.com",
-      databaseURL: "https://chacharas-c6ec7-default-rtdb.firebaseio.com",
-      projectId: "chacharas-c6ec7",
-      storageBucket: "chacharas-c6ec7.appspot.com",
-      messagingSenderId: "707214837038",
-      appId: "1:707214837038:web:fa947fe910e5ef905ae6bf",
-      measurementId: "G-R340PVF1GK"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const productosRef = db.ref('productos');
-    productosRef.once('value', function (snapshot) {
-      snapshot.forEach(function (childSnapshot) {
-        var producto = childSnapshot.val();
-        // Aquí puedes realizar alguna acción con los datos del producto
-        console.log(producto);
-      });
-    });
-
-    const catalogoProductos = document.getElementById('catalogoProductos');
-    productosRef.once('value', function (snapshot) {
-      snapshot.forEach(function (childSnapshot) {
-        var producto = childSnapshot.val();
-
-        // Genera el HTML correspondiente para cada producto
-        var productoHTML = `
-    <div class="col-12 col-sm-6 col-md-4">
-          <div class="card mb-4 ">
-            <div id="diseño">
-              <div id="tit">
-                <img src=${producto.imagen} style="width: 150px;" title=${producto.nombre} alt=${producto.nombre}>
-                <br>
-                <h5>${producto.nombre}</h5>
-                <p class="card-price" data-precio="35.00">$${producto.precio}</p>
-              </div>
-              <button onclick="getData('${producto.id}')">Obtener cotizacion</button>
-              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick" />
-                <input type="hidden" name="hosted_button_id" value=${producto.paypal} />
-                <input type="hidden" name="currency_code" value="MXN" />
-                <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_buynow_SM.gif" border="0" name="submit" title="PayPal es una forma segura y fácil de pagar en línea." alt="Comprar ahora" />
-            </form>
-              <a href="${producto.nombre}.html" title="aretegirasol"><button class="btn btn-sm btn-outline-secondary" id="cyn">Ir</button></a>
-            </div>
-          </div>
-        </div>
-    `;
-        catalogoProductos.innerHTML += productoHTML;
       });
     });
 
