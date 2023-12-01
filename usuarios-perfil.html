@@ -21,8 +21,8 @@
         <div class="row">
             <div class="col-lg-10">
                 <br />
-                <button class="btn btn-secondary" data-toggle="tooltip" title="Nuevo Producto" onclick="window.location.href = 'Registro.html';">Agregar
-                    nuevo</button>
+                <button class="btn btn-secondary" data-toggle="tooltip" title="Nuevo Producto" onclick="window.location.href = 'Registro_em.html';">Agregar
+                    nuevo empleado</button>
 
                 <!--Modal-->
                 <div id="modalEdit" class="modal fade" tabindex="-1" role="dialog"
@@ -54,6 +54,10 @@
                                         <label>Cuenta</label>
                                         <input id="account" type="text" class="form-control" required>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Auto asignado</label>
+                                        <input id="car" type="text" class="form-control" required>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -75,6 +79,7 @@
                                 <th scope="col">Apellidos</th>
                                 <th scope="col">Correo</th>
                                 <th scope="col">Cuenta</th>
+                                <th scope="col">Auto asignado</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
@@ -124,11 +129,12 @@
             let lastName = $('#lastname').val();
             let email = $('#email').val();
             let account = $('#account').val();
+            let car = $('#car').val();
             let idFirebase = id;
             if (idFirebase == '') {
                 idFirebase = coleccionUsuarios.push().key;
             };
-            data = { name: name, lastName: lastName, email: email, account: account };
+            data = { name: name, lastName: lastName, email: email, account: account, car: car };
             actualizacionData = {};
             actualizacionData[`/${idFirebase}`] = data;
             coleccionUsuarios.update(actualizacionData);
@@ -144,6 +150,7 @@
     <td>${lastName}</td>
     <td>${email}</td>
     <td>${account}</td>
+    <td>${car}</td>
     <td><button class="btnEditar btn btn-secondary" data-toggle="tooltip" title="Editar">${iconoEditar}</button><button class="btnBorrar btn btn-danger" data-toggle="tooltip" title="Borrar">${iconoBorrar}</button></td>
     `
         };
@@ -167,6 +174,7 @@
             $('#lastname').val('');
             $('#email').val('');
             $('#account').val('');
+            $('#car').val('');
             $('form').trigger('reset');
             $('#modalEdit').modal('show');
         });
@@ -176,11 +184,13 @@
             let lastname = $(this).closest('tr').find('td:eq(1)').text();
             let email = $(this).closest('tr').find('td:eq(2)').text();
             let account = $(this).closest('tr').find('td:eq(3)').text();
+            let car = $(this).closest('tr').find('td:eq(4)').text();
             $('#id').val(id);
             $('#name').val(name);
             $('#lastname').val(lastname);
             $('#email').val(email);
             $('#account').val(account);
+            $('#car').val(car);
             $('#modalEdit').modal('show');
         });
         $('#tablaUsuarios').on('click', '.btnBorrar', function () {

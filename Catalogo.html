@@ -357,16 +357,16 @@ function createTable(data) {
         var dataCell = dataRow.insertCell(-1);
         dataCell.innerText = data[key];
     }
-
-    // Función para agregar al carritofunction addToCart(product) {
+// Función para agregar al carrito
+function addToCart(product) {
     // Configuración del objeto del botón de PayPal
     var paypalButton = {
-        business: 'TU_ID_DE_VENDEDOR_PAYPAL',
+        business: '7C3V74C5BWNBG',
         item_name: product.name,
         amount: product.amount,
         currency_code: 'MXN',
-        return: 'URL_DE_RETORNO',
-        cancel_return: 'URL_DE_CANCELACION',
+        return: 'https://www.paypal.com/cgi-bin/webscr',
+        cancel_return: 'https://www.paypal.com/cgi-bin/webscr',
         image_url: product.image_url,
         custom: product.custom
     };
@@ -390,15 +390,17 @@ function createTable(data) {
 
     // Enviar el formulario para redirigir al usuario a PayPal
     form.submit();
+}
 
-    // Crear una celda adicional para el botón "Agregar al Carrito"
-    var buttonCell = dataRow.insertCell(-1);
-    var addButton = document.createElement('button');
-    addButton.innerText = 'Agregar al Carrito';
-    addButton.onclick = function () {
-        addToCart(data['amount']);  // Pasa solo el valor 'amount' a la función addToCart
-    };
-    buttonCell.appendChild(addButton);
+// Crear una celda adicional para el botón "Agregar al Carrito"
+var buttonCell = dataRow.insertCell(-1);
+var addButton = document.createElement('button');
+addButton.innerText = 'Agregar al Carrito';
+addButton.onclick = function () {
+    addToCart(data);  // Pasa todo el objeto 'data' a la función addToCart
+};
+buttonCell.appendChild(addButton);
+
 }
       });
     });
