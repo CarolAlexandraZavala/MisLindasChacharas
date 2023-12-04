@@ -7,9 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <meta name="title" content="Catalogo">
-  <meta name="description"
-    content="Variedad de productos de excelente calidad, excelente costo y de los mejores materiales, innovando en la moda y el cuidado personal, queriendo rezaltar la belleza de cada mujer">
-  <meta name="keywords" content="Aretes,nube,antioxidante">
+  <meta name="description" content="Variedad de productos de excelente calidad, excelente costo y de los mejores materiales, innovando en la moda y el cuidado personal, queriendo resaltar la belleza de cada mujer">
+  <meta name="keywords" content="Aretes, nube, antioxidante">
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="css/styles-icons.css">
   <link rel="stylesheet" href="css/styles-index.css">
@@ -22,15 +21,15 @@
   <link rel="icon" href="img/Icono2.ico" type="image/png" />
   <script src="js/NavarResponsive.js"></script>
 
+  <!-- Google Analytics -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-XDY927KX9Q');
   </script>
 
-  <!--Script filtro de busqueda-->
+  <!-- Script de filtro de búsqueda -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const filterSelect = document.getElementById('filter');
@@ -51,18 +50,10 @@
             cards.sort((a, b) => b.querySelector('h5').textContent.localeCompare(a.querySelector('h5').textContent));
             break;
           case 'price-asc':
-            cards.sort((a, b) => {
-              const priceA = parseFloat(a.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
-              const priceB = parseFloat(b.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
-              return priceA - priceB;
-            });
+            sortCardsByPrice(cards, true);
             break;
           case 'price-desc':
-            cards.sort((a, b) => {
-              const priceA = parseFloat(a.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
-              const priceB = parseFloat(b.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
-              return priceB - priceA;
-            });
+            sortCardsByPrice(cards, false);
             break;
           default:
             // Predeterminado: mantener el orden original
@@ -72,17 +63,40 @@
         // Vuelve a agregar las tarjetas al contenedor en el nuevo orden
         cards.forEach((card) => cardsContainer.appendChild(card));
       });
+
+      function sortCardsByPrice(cards, ascending) {
+        cards.sort((a, b) => {
+          const priceA = parseFloat(a.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
+          const priceB = parseFloat(b.querySelector('p').textContent.replace(/[^0-9.-]+/g, ''));
+          return ascending ? priceA - priceB : priceB - priceA;
+        });
+      }
     });
+
+    function searchProducts() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const cards = Array.from(document.querySelectorAll('.card'));
+
+  // Filtra las tarjetas basándose en el nombre
+  const filteredCards = cards.filter(card => {
+    const productName = card.querySelector('h5').textContent.toLowerCase();
+    return productName.includes(searchInput);
+  });
+
+  // Limpia el contenedor de productos antes de agregar los resultados de la búsqueda
+  const cardsContainer = document.querySelector('.row');
+  cardsContainer.innerHTML = '';
+
+  // Agrega las tarjetas filtradas al contenedor
+  filteredCards.forEach(card => cardsContainer.appendChild(card));
+}
   </script>
-
-
+  
   <title>MisLindasChacharas || Catalogo</title>
   <style>
     #espacio {
 
-      margin-top: 100px;
-
-
+      margin-top: 10px;
     }
 
     #imagenes {
@@ -90,17 +104,15 @@
       height: 300px;
       margin-left: 20%;
       margin-right: 20%;
-
     }
 
     #diseño {
       font-size: 15px;
       margin-left: 20px;
       text-align: center;
-      padding-bottom: 20px;
-      width: 300px;
-      height: 400px;
-
+      padding-bottom: 5px;
+      width: 440px;
+      height: 440px;
     }
 
     #tablaPersonas {
@@ -126,49 +138,43 @@
   <header>
     <div class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(133, 71, 122);">
       <div class="container">
-        <a href="index.html" class="navbar-brand " title="index">
-
+        <a href="index.html" class="navbar-brand" title="index">
           <strong>MisLindasChacharas</strong>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
           aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
+  
         <div class="collapse navbar-collapse" id="navbarHeader">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
               <a href="index.html" class="nav-link active" title="index">Inicio</a>
             </li>
-
             <li class="nav-item">
               <a href="Aretes.html" class="nav-link active" title="aretes">Aretes</a>
             </li>
-
             <li class="nav-item">
               <a href="Collares.html" class="nav-link active" title="collares">Collares</a>
             </li>
-
             <li class="nav-item">
               <a href="Cuidado Personal.html" class="nav-link active" title="cuidado">Cuidado personal</a>
             </li>
-
             <li class="nav-item">
               <a href="Ropa.html" class="nav-link active" title="ropa">Ropa</a>
             </li>
-
           </ul>
+  
           <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
             <input type="hidden" name="cmd" value="_s-xclick">
             <input type="hidden" name="encrypted"
               value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_viewcart_SM.gif" border="0"
-              name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
-          </form>
-          <li class="nav-item">
-            <input type="text" id="formulario">
-            <button class="btn rounded-pill" style="background-color: rgb(214, 161, 204);" id="boton">buscar</button>
-          </li>
+              <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_viewcart_SM.gif" border="0"
+                name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea">
+              <input type="text" id="searchInput" class="form-control" placeholder="Buscar productos...">
+              <button type="button" id="searchButton" onclick="searchProducts()">Buscar</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -406,7 +412,5 @@ buttonCell.appendChild(addButton);
     });
 
   </script>
-
 </body>
-
 </html>
