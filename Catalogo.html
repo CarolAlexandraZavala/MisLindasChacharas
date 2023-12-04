@@ -78,6 +78,9 @@
 
   <title>MisLindasChacharas || Catalogo</title>
   <style>
+    #cotizacion th, #cotizacion td {
+      text-align: center;
+    }
     #espacio {
 
       margin-top: 100px;
@@ -192,20 +195,17 @@
           <option value="price-desc">Precio descendente</option>
         </select>
       </div>
-    </div>
-
-
+    </div>    
     <div class="container">
       <section>
-        <div class="row">
-          <div id="catalogoProductos" class="row"></div>
-        </div>
+         <div class="row">
+            <div id="catalogoProductos" class="row"></div>
+         </div>
       </section>
-        <aside class="col-sm-4">
-          <table id="data-table"></table>
-        </aside>
+      <aside class="col-sm-4">
+          <table id="cotizacion" class="table table-bordered"></table>
+      </aside>
     </div>
-
   </div>
 
   <br>
@@ -249,10 +249,9 @@
   <script src="Productos.json"></script>
   <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
   <script
-    src="https://www.paypal.com/sdk/js?client-id=AWp5XLwAVcsjPx07ujiuwdrF71xDEZLA6wZ9BJbLND0feaTnYRn8RlRqdrkhqAf14chFoPzkuB6Odb3U"></script>
-
+    src="https://www.paypal.com/sdk/js?client-id=AWp5XLwAVcsjPx07ujiuwdrF71xDEZLA6wZ9BJbLND0feaTnYRn8RlRqdrkhqAf14chFoPzkuB6Odb3U">
+  </script>
   <script>
-
     var firebaseConfig = {
       apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
       authDomain: "chacharas-c6ec7.firebaseapp.com",
@@ -263,10 +262,8 @@
       appId: "1:707214837038:web:fa947fe910e5ef905ae6bf",
       measurementId: "G-R340PVF1GK"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     const productosRef = db.ref('productos');
     productosRef.once('value', function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
@@ -275,15 +272,13 @@
         console.log(producto);
       });
     });
-
     const catalogoProductos = document.getElementById('catalogoProductos');
     productosRef.once('value', function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var producto = childSnapshot.val();
-
         // Genera el HTML correspondiente para cada producto
         var productoHTML = `
-    <div class="col-12 col-sm-6 col-md-4">
+        <div class="col-12 col-sm-6 col-md-4">
           <div class="card mb-4 ">
             <div id="diseño">
               <div id="tit">
@@ -292,121 +287,64 @@
                 <h5>${producto.nombre}</h5>
                 <p class="card-price" data-precio="35.00">$${producto.precio}</p>
               </div>
-              <button onclick="getData('${producto.id}')">Obtener cotizacion</button>
+              <button id="obtenerCotizacionBtn">Obtener Cotización</button>
               <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                 <input type="hidden" name="cmd" value="_s-xclick" />
                 <input type="hidden" name="hosted_button_id" value=${producto.paypal} />
                 <input type="hidden" name="currency_code" value="MXN" />
                 <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_buynow_SM.gif" border="0" name="submit" title="PayPal es una forma segura y fácil de pagar en línea." alt="Comprar ahora" />
-            </form>
+              </form>
               <a href="${producto.nombre}.html" title="aretegirasol"><button class="btn btn-sm btn-outline-secondary" id="cyn">Ir</button></a>
             </div>
           </div>
         </div>
-    `;
-        catalogoProductos.innerHTML += productoHTML;
-          
-  function getData(productoId) {
-            // Hacer una solicitud fetch a la ruta del servidor
-            fetch(`/api/producto/${productoId}`)
-                .then(response => {
-                    // Verificar si la solicitud fue exitosa
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    // Convertir la respuesta a JSON
-                    return response.json();
-                })
-                .then(data => {
-                    // Manejar los detalles del producto aquí (puedes mostrarlos en un modal, por ejemplo)
-                    console.log(data);
-                    alert(`Detalles del producto:\nNombre: ${data.nombre}\nAltura: ${data.altura}\nAncho: ${data.ancho}\nLongitud: ${data.longitud}\nPeso: ${data.peso}`);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+        `;
+        catalogoProductos.innerHTML += productoHTML;              
+        // Función para realizar la solicitud y actualizar la tabla
+        function obtenerCotizacion() {
+          fetch('/api/data')
+            .then(response => response.json())
+            .then(data => {
+              const tablaCotizacion = document.getElementById('cotizacion');
+              // Limpia la tabla antes de agregar nuevos datos
+              tablaCotizacion.innerHTML = '';
+
+              // Crea la fila de encabezado con las columnas
+              const encabezado = document.createElement('tr');
+              encabezado.innerHTML = `
+                <th>Alias</th>
+                <th>Cantidad</th>
+                <th>Moneda</th>
+                <th>Fecha de Entrega</th>
+                <th>Servicio</th>
+                <th>Accion</th>
+              `;
+              tablaCotizacion.appendChild(encabezado);
+
+              // Crea una fila para cada producto con sus valores
+              const fila = document.createElement('tr');
+              fila.innerHTML = `
+                <td>${data.alias}</td>
+                <td>${data.amount}</td>
+                <td>${data.currency}</td>
+                <td>${data.deliveryTimestamp}</td>
+                <td>${data.serviceName}</td>
+                <td>
+                  <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="F78T5Y953M3VJ">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_cart_SM.gif" border="0" name="submit"
+                      alt="PayPal, la forma más segura y rápida de pagar en línea.">
+                  </form>
+                </td>
+              `;
+              tablaCotizacion.appendChild(fila);
+            })
+            .catch(error => console.error('Error al obtener la cotización:', error));
         }
-  function getData() {
-    fetch('/api/data')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Datos recibidos:', data);
-            // Llamamos a createTable solo con la propiedad data
-            createTable(data);
-        })
-        .catch(error => console.error('Error:', error));
-}    
-function createTable(data) {
-    console.log('Creando la tabla con datos:', data);
-
-    // Obtener el elemento de la tabla
-    var table = document.getElementById('data-table');
-
-    // Limpiar la tabla si ya contiene datos anteriores
-    table.innerHTML = '';
-
-    // Crear la fila de encabezado (cabecera)
-    var headerRow = table.insertRow(0);
-    for (var key in data) {
-        var headerCell = headerRow.insertCell(-1);
-        headerCell.innerText = key;
-    }
-    // Crear la fila de datos
-    var dataRow = table.insertRow(-1);
-    for (var key in data) {
-        var dataCell = dataRow.insertCell(-1);
-        dataCell.innerText = data[key];
-    }
-// Función para agregar al carrito
-function addToCart(product) {
-    // Configuración del objeto del botón de PayPal
-    var paypalButton = {
-        business: '7C3V74C5BWNBG',
-        item_name: product.name,
-        amount: product.amount,
-        currency_code: 'MXN',
-        return: 'https://www.paypal.com/cgi-bin/webscr',
-        cancel_return: 'https://www.paypal.com/cgi-bin/webscr',
-        image_url: product.image_url,
-        custom: product.custom
-    };
-
-    // Crear el formulario de PayPal
-    var form = document.createElement('form');
-    form.action = 'https://www.paypal.com/cgi-bin/webscr';
-    form.method = 'post';
-
-    // Agregar campos al formulario
-    for (var key in paypalButton) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = paypalButton[key];
-        form.appendChild(input);
-    }
-
-    // Agregar el formulario al cuerpo del documento
-    document.body.appendChild(form);
-
-    // Enviar el formulario para redirigir al usuario a PayPal
-    form.submit();
-}
-
-// Crear una celda adicional para el botón "Agregar al Carrito"
-var buttonCell = dataRow.insertCell(-1);
-var addButton = document.createElement('button');
-addButton.innerText = 'Agregar al Carrito';
-addButton.onclick = function () {
-    addToCart(data);  // Pasa todo el objeto 'data' a la función addToCart
-};
-buttonCell.appendChild(addButton);
-
-}
-      });
+        document.getElementById('obtenerCotizacionBtn').addEventListener('click', obtenerCotizacion);
+      })
     });
-
   </script>
-
 </body>
-
 </html>
