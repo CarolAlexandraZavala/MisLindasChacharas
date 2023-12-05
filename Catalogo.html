@@ -203,12 +203,23 @@
       </div>
     </div>    
     <div class="container">
-      <aside class="col-sm-4">
-          <table id="cotizacion" class="table table-bordered"></table>
-      </aside>
       <section>
          <div class="row">
-            <div id="catalogoProductos" class="row"></div>
+            <main id="catalogoProductos" class="col-sm-8 row"></main>            
+            <!-- Carrito -->
+            <aside class="col-sm-4">
+              <h2>Carrito</h2>
+              <!-- Elementos del carrito -->
+              <ul id="carrito" class="list-group"></ul>
+              <hr>
+              <!-- Precio total -->
+              <p class="text-right">Total: <span id="total"></span>&dollar;</p>
+              <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>
+            </aside>            
+            <aside class="col-sm-4">
+              <table id="cotizacion" class="table table-bordered">
+              </table>
+            </aside>
          </div>
       </section>
     </div>
@@ -284,22 +295,18 @@
         var producto = childSnapshot.val();
         // Genera el HTML correspondiente para cada producto
         var productoHTML = `
-        <div class="col-12 col-sm-6 col-md-4">
-          <div class="card mb-4 ">
+        <div class="col-12 col-sm-8 col-md-4">
+          <div class="card mb-4 align-items-center">
             <div id="diseño">
               <div id="tit">
                 <img src=${producto.imagen} style="width: 150px;" title=${producto.nombre} alt=${producto.nombre}>
                 <br>
                 <h5>${producto.nombre}</h5>
                 <p class="card-price" data-precio="35.00">$${producto.precio}</p>
+                <button class="btn btn-primary" id="obtenerCotizacionBtn">Obtener Cotización</button>
+                <button class="btn btn-primary" data-marcador="${producto.identificador}" onclick="anyadirProductoAlCarrito()">Agregar al carrito</button>
+
               </div>
-              <button id="obtenerCotizacionBtn">Obtener Cotización</button>
-              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick" />
-                <input type="hidden" name="hosted_button_id" value=${producto.paypal} />
-                <input type="hidden" name="currency_code" value="MXN" />
-                <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_buynow_SM.gif" border="0" name="submit" title="PayPal es una forma segura y fácil de pagar en línea." alt="Comprar ahora" />
-              </form>
               <a href="${producto.nombre}.html" title="aretegirasol"><button class="btn btn-sm btn-outline-secondary" id="cyn">Ir</button></a>
             </div>
           </div>
@@ -344,7 +351,106 @@
                   </form>
                 </td>
               `;
-              tablaCotizacion.appendChild(fila);
+              tablaCotizacion.appendChild(fila);     
+              document.addEventListener('DOMContentLoaded', () => {    
+                let carrito = [];
+                const divisa = '$';
+                const DOMcarrito = document.querySelector('#carrito');
+                const DOMtotal = document.querySelector('#total');
+                const DOMbotonVaciar = document.querySelector('#boton-vaciar');     
+              /*Evento para añadir un producto al carrito de la compra*/
+              function anyadirProductoAlCarrito(evento) {
+                const marcador = evento.target.getAttribute('data-marcador');
+                // Obtener el producto directamente desde Firebase usando su identificador
+                productosRef.child(marcador).once('value', function(snapshot) {
+                    const producto = snapshot.val();
+                    // Añadir el producto al carrito
+                    carrito.push({
+                        id: producto.identificador,
+                        nombre: producto.nombre,
+                        precio: producto.precio,
+                        altura:producto.altura,
+                        ancho:producto.ancho,
+                        longitud:producto.longitud,
+                        peso:producto.peso
+                    });
+                    // Actualizar y renderizar el carrito
+                    renderizarCarrito();
+                });
+              }
+
+              /*Dibuja todos los productos guardados en el carrito*/
+              function renderizarCarrito() {
+                // Vaciamos todo el html
+                DOMcarrito.textContent = '';
+                // Quitamos los duplicados
+                const carritoSinDuplicados = [...new Set(carrito)];
+                // Generamos los Nodos a partir de carrito
+                carritoSinDuplicados.forEach((item) => {
+                  // Obtenemos el item que necesitamos de la variable base de datos
+                  const miItem = baseDeDatos.filter((itemBaseDatos) => {
+                      // ¿Coincide las id? Solo puede existir un caso
+                      return itemBaseDatos.id === parseInt(item);
+                  });
+                  // Cuenta el número de veces que se repite el producto
+                  const numeroUnidadesItem = carrito.reduce((total, itemId) => {
+                      // ¿Coincide las id? Incremento el contador, en caso contrario no mantengo
+                      return itemId === item ? total += 1 : total;
+                  }, 0);
+                  // Creamos el nodo del item del carrito
+                  const miNodo = document.createElement('li');
+                  miNodo.classList.add('list-group-item', 'text-right', 'mx-2');
+                  miNodo.textContent = `${numeroUnidadesItem} x ${miItem[0].nombre} - ${miItem[0].precio}${divisa}`;
+                  // Boton de borrar
+                  const miBoton = document.createElement('button');
+                  miBoton.classList.add('btn', 'btn-danger', 'mx-5');
+                  miBoton.textContent = 'X';
+                  miBoton.style.marginLeft = '1rem';
+                  miBoton.dataset.item = item;
+                  miBoton.addEventListener('click', borrarItemCarrito);
+                  // Mezclamos nodos
+                  miNodo.appendChild(miBoton);
+                  DOMcarrito.appendChild(miNodo);
+                });
+              // Renderizamos el precio total en el HTML
+              DOMtotal.textContent = calcularTotal();
+              }
+              /*Evento para borrar un elemento del carrito*/
+              function borrarItemCarrito(evento) {
+                // Obtenemos el producto ID que hay en el boton pulsado
+                const id = evento.target.dataset.item;
+                // Borramos todos los productos
+                carrito = carrito.filter((carritoId) => {
+                  return carritoId !== id;
+                });
+                // volvemos a renderizar
+                renderizarCarrito();
+              }
+              /*Calcula el precio total teniendo en cuenta los productos repetidos*/
+              function calcularTotal() {
+                // Recorremos el array del carrito
+                return carrito.reduce((total, item) => {
+                  // De cada elemento obtenemos su precio
+                  const miItem = baseDeDatos.filter((itemBaseDatos) => {
+                    return itemBaseDatos.id === parseInt(item);
+                  });
+                  // Los sumamos al total
+                return total + miItem[0].precio;
+                }, 0).toFixed(2);
+              }
+              /*Varia el carrito y vuelve a dibujarlo*/
+              function vaciarCarrito() {
+                // Limpiamos los productos guardados
+                carrito = [];
+                // Renderizamos los cambios
+                renderizarCarrito();
+              }
+              // Eventos
+              DOMbotonVaciar.addEventListener('click', vaciarCarrito);
+              // Inicio
+              renderizarProductos();
+              renderizarCarrito();
+            });
             })
             .catch(error => console.error('Error al obtener la cotización:', error));
         }
