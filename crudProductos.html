@@ -247,17 +247,17 @@
         $('form').submit(function (e) {
                 e.preventDefault();
                 let id = $('#id').val();
-                let identificador = $('#identificador').val();
+                let identificador = parseInt($('#identificador').val());
                 let nombre = $('#nombre').val();
                 let categoria = $('#categoria').val();
                 let descripcion = $('#descripcion').val();
-                let cantidad = $('#cantidad').val();
-                let precio = $('#precio').val();
+                let cantidad = parseInt($('#cantidad').val());
+                let precio = parseFloat($('#precio').val());
                 let paypal = $('#paypal').val();
-                let altura = $('#altura').val();
-                let ancho = $('#ancho').val();
-                let longitud = $('#longitud').val();
-                let peso = $('#peso').val();
+                let altura = parseFloat($('#altura').val());
+                let ancho = parseFloat($('#ancho').val());
+                let longitud = parseFloat($('#longitud').val());
+                let peso = parseFloat($('#peso').val());
                 let idFirebase = id;
                 if (idFirebase == '') {
                     idFirebase = coleccionProductos.push().key;
