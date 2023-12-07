@@ -212,10 +212,9 @@
     <div class="container">
       <section>
          <div class="row">
-            <main id="catalogoProductos" class="col-sm-8 row"></main>            
+            <main id="catalogoProductos" class="col-sm-6 row"></main>            
             <!-- Carrito -->
-            <aside class="col-sm-4">
-              <main>
+            <aside class="col-sm-6">
                 <h2>Carrito</h2>
                 <!-- Elementos del carrito -->
                 <ul id="carrito" class="list-group"></ul>
@@ -225,12 +224,8 @@
                 <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>              
                 <button class="btn btn-primary" id="obtenerCotizacionBtn">Obtener Cotización</button>
                 <a class="btn btn-primary" href="loginU.html">Pagar</a>
-
-              </main>
-              <aside class="col-sm-4">
-                <table id="cotizacion" class="table table-bordered"></table>
-              </aside>
-            </aside>            
+                <table id="cotizacion" class="table table-bordered"></table>    
+            </aside>        
          </div>
       </section>
     </div>
@@ -483,7 +478,7 @@
       }
       //Este es una funcion especial para el envio
       function anyadirEnvioAlCarrito(amount) {
-
+        
         console.log("Añadiendo producto al carrito con datos:", amount);
 
         // Utilizar un identificador único para el producto "Envío"
@@ -614,7 +609,9 @@
       renderizarCarrito();
       // Agrega esto al final del script
       window.anyadirProductoAlCarrito = anyadirProductoAlCarrito;
+      window.anyadirEnvioAlCarrito = anyadirEnvioAlCarrito;
     });
   </script>
 </body>
+</html>
 </html>
