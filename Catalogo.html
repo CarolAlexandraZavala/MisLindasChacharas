@@ -208,19 +208,22 @@
             <main id="catalogoProductos" class="col-sm-8 row"></main>            
             <!-- Carrito -->
             <aside class="col-sm-4">
-              <h2>Carrito</h2>
-              <!-- Elementos del carrito -->
-              <ul id="carrito" class="list-group"></ul>
-              <hr>
-              <!-- Precio total -->
-              <p class="text-right">Total: &dollar;<span id="total"></span></p>
-              <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>              
-              <button class="btn btn-primary" id="obtenerCotizacionBtn">Obtener Cotización</button>
+              <main>
+                <h2>Carrito</h2>
+                <!-- Elementos del carrito -->
+                <ul id="carrito" class="list-group"></ul>
+                <hr>
+                <!-- Precio total -->
+                <p class="text-right">Total: &dollar;<span id="total"></span></p>
+                <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>              
+                <button class="btn btn-primary" id="obtenerCotizacionBtn">Obtener Cotización</button>
+              </main>
+              <aside class="col-sm-4">
+                <div>                
+                <table id="cotizacion" class="table table-bordered"></table>
+                </div>
+              </aside>
             </aside>            
-            <aside class="col-sm-4">
-              <table id="cotizacion" class="table table-bordered">
-              </table>
-            </aside>
          </div>
       </section>
     </div>
@@ -318,34 +321,42 @@
           </div>
         </div>
         `;
-        catalogoProductos.innerHTML += productoHTML;                   
+        catalogoProductos.innerHTML += productoHTML;         
         // Variables para el carrito
         const db = firebase.database();
         const carritoRef = db.ref('carrito');
         // Función para realizar la solicitud y actualizar la tabla
-        function obtenerCotizacion() {
-          eliminarNodoCotizacion();
-          crearNuevoNodoCotizacion();
-          fetch('/api/data')
-            .then(response => response.json())
-            .then(data => {
-              const tablaCotizacion = document.getElementById('cotizacion');
-              // Limpia la tabla antes de agregar nuevos datos
-              tablaCotizacion.innerHTML = '';
+        let datosCargados = false; // Bandera para rastrear si los datos ya se han cargado
+        async function obtenerCotizacion() {
+          console.log('Llamada a obtenerCotizacion()'); // Registro para ver cuántas veces se llama a la función
 
-              // Crea la fila de encabezado con las columnas
-              const encabezado = document.createElement('tr');
-              encabezado.innerHTML = `
-                <th>Alias</th>
-                <th>Cantidad</th>
-                <th>Moneda</th>
-                <th>Fecha de Entrega</th>
-                <th>Servicio</th>
-                <th>Accion</th>
-              `;
-              tablaCotizacion.appendChild(encabezado);
+          if (datosCargados) {
+            console.log('Los datos de la cotización ya se han cargado');
+            return;
+          }
 
-              // Crea una fila para cada producto con sus valores
+          console.log('Procediendo a actualizar la tabla de cotización');
+          const tablaCotizacion = document.getElementById('cotizacion');
+          eliminarNodoCotizacion(); // Revisa qué hace esta función
+          crearNuevoNodoCotizacion(); // Revisa qué hace esta función
+          tablaCotizacion.innerHTML = '';
+
+          const encabezado = document.createElement('tr');
+          encabezado.innerHTML = `
+            <th>Alias</th>
+            <th>Cantidad</th>
+            <th>Moneda</th>
+            <th>Fecha de Entrega</th>
+            <th>Servicio</th>
+            <th>Acción</th>
+          `;
+          tablaCotizacion.appendChild(encabezado);
+
+          try {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+
+            if (data && typeof data === 'object' && !Array.isArray(data)) {
               const fila = document.createElement('tr');
               fila.innerHTML = `
                 <td>${data.alias}</td>
@@ -353,17 +364,16 @@
                 <td>${data.currency}</td>
                 <td>${data.deliveryTimestamp}</td>
                 <td>${data.serviceName}</td>
-                <td>
-                  <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                    <input type="hidden" name="cmd" value="_s-xclick">
-                    <input type="hidden" name="hosted_button_id" value="F78T5Y953M3VJ">
-                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_cart_SM.gif" border="0" name="submit"
-                      alt="PayPal, la forma más segura y rápida de pagar en línea.">
-                  </form>
-                </td>
+                <td><input type="radio" name="productoSeleccionado" onclick="anyadirProductoAlCarrito(${data.amount})"></td>
               `;
-            })
-            .catch(error => console.error('Error al obtener la cotización:', error));
+              tablaCotizacion.appendChild(fila);
+              datosCargados = true; // Establecer la bandera para indicar que los datos se han cargado
+            } else {
+              console.log('Los datos de la API no son un objeto válido');
+            }
+          } catch (error) {
+            console.error('Error al obtener la cotización:', error);
+          }
         }
         //Crea el nodo de cotizacion para usar los datos de ese nodo a la API
         function crearNuevoNodoCotizacion() {
@@ -373,37 +383,45 @@
             let sumaAncho = 0;
             let sumaLongitud = 0;
             let sumaPeso = 0;
-
             // Recorre los productos en el carrito y suma sus precios, altura, ancho, longitud y peso
             for (const productId in carritoActual) {
               if (carritoActual.hasOwnProperty(productId)) {
                 const producto = carritoActual[productId];
-                sumaAltura += producto.altura * producto.cantidad;
-                sumaAncho += producto.ancho * producto.cantidad;
-                sumaLongitud += producto.longitud * producto.cantidad;
+                sumaAltura += producto.altura;
+                sumaAncho += producto.ancho;
+                sumaLongitud += producto.longitud;
                 sumaPeso += producto.peso * producto.cantidad;
               }
             }
-            // Crea un nuevo objeto con las sumas totales, incluyendo el identificador con valor 1
+            // Crea un nuevo objeto con las sumas totales
             const nuevoNodoCotizacion = {
-              identificador: 1,  // Identificador constante con valor 1
               altura: sumaAltura.toFixed(2),
               ancho: sumaAncho.toFixed(2),
               longitud: sumaLongitud.toFixed(2),
               peso: sumaPeso.toFixed(2)
             };
-            // Crea o actualiza el nodo "cotizacion" con las sumas totales
-            db.ref('cotizacion').set(nuevoNodoCotizacion);
+            // Utiliza una clave fija para el nodo de cotización (en este caso, "1")
+            const claveCotizacion = '1';
+            // Crea o actualiza el nodo "cotizacion" con las sumas totales y la clave específica
+            const actualizacion = {};
+            actualizacion[`/cotizacion/${claveCotizacion}`] = nuevoNodoCotizacion;
+            db.ref().update(actualizacion);
           });
         }
-
-
         //Elimina el nodo para usarlo de forma especial siempre que se presione el boton
         function eliminarNodoCotizacion() {
-          // Elimina el nodo "cotizacion" completo
-          db.ref('cotizacion').remove();
-        }
+          // Obtener la referencia del nodo "cotizacion"
+          const cotizacionRef = db.ref('cotizacion');
 
+        // Utilizar una promesa para manejar la operación de eliminación
+        return cotizacionRef.remove()
+          .then(() => {
+            console.log("Nodo 'cotizacion' eliminado exitosamente");
+          })
+          .catch((error) => {
+            console.error("Error al eliminar el nodo 'cotizacion':", error);
+          });
+        }
         document.getElementById('obtenerCotizacionBtn').addEventListener('click', obtenerCotizacion);
       })      
       // Variables para el carrito
@@ -456,6 +474,41 @@
             }
         });
       }
+      //Este es una funcion especial para el envio
+      function anyadirProductoAlCarrito(amount) {
+
+        console.log("Añadiendo producto al carrito con datos:", amount);
+
+        // Utilizar un identificador único para el producto "Envío"
+        const idProductoStr = "envio";
+
+        carritoRef.once('value', function (carritoSnapshot) {
+          const carritoActual = carritoSnapshot.val() || {};
+
+          // Verificar si el producto "Envío" ya está en el carrito
+          if (carritoActual[idProductoStr]) {
+            carritoActual[idProductoStr].cantidad += 1; // Aumentar la cantidad si ya existe
+          } else {
+            // Si no está, agregarlo con los datos específicos
+            carritoActual[idProductoStr] = {
+              nombre: "Envío",
+              precio: amount || 0,
+              altura: 0,
+              ancho: 0,
+              longitud: 0,
+              peso: 0,
+              cantidad: 1
+            };
+          }
+
+          // Actualizar el nodo "carrito" en Firebase
+          carritoRef.set(carritoActual);
+
+          // Llamar a renderizarCarrito() si es necesario
+          renderizarCarrito();
+        });
+      }
+
       /*Dibuja todos los productos guardados en el carrito*/
       function renderizarCarrito() {
         // Vaciamos todo el html
