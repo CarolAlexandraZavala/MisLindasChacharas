@@ -228,9 +228,7 @@
 
               </main>
               <aside class="col-sm-4">
-                <div>                
                 <table id="cotizacion" class="table table-bordered"></table>
-                </div>
               </aside>
             </aside>            
          </div>
@@ -373,7 +371,7 @@
                 <td>${data.currency}</td>
                 <td>${data.deliveryTimestamp}</td>
                 <td>${data.serviceName}</td>
-                <td><input type="radio" name="productoSeleccionado" onclick="anyadirProductoAlCarrito(${data.amount})"></td>
+                <td><input type="radio" name="productoSeleccionado" onclick="anyadirEnvioAlCarrito(${data.amount})"></td>
               `;
               tablaCotizacion.appendChild(fila);
               datosCargados = true; // Establecer la bandera para indicar que los datos se han cargado
@@ -484,7 +482,7 @@
         });
       }
       //Este es una funcion especial para el envio
-      function anyadirProductoAlCarrito(amount) {
+      function anyadirEnvioAlCarrito(amount) {
 
         console.log("Añadiendo producto al carrito con datos:", amount);
 
