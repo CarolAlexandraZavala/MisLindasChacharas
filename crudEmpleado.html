@@ -106,8 +106,6 @@
         <div class="row">
             <div class="col-lg-10">
                 <br />
-                <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Empleado">Agregar
-                    nuevo Empleado</button>
                 <!--Modal-->
                 <div id="modalAltaEdicion" class="modal fade" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -189,8 +187,14 @@
 
     <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    
 
     <script>
+        // Función para obtener el valor del parámetro "correo" de la URL
+        function getCorreoFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("correo");
+        }
         var firebaseConfig = {
             apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
             authDomain: "chacharas-c6ec7.firebaseapp.com",
@@ -203,10 +207,37 @@
         };
 
         firebase.initializeApp(firebaseConfig);
+        // Llamar a la función para obtener el correo de la URL
+        const correo = getCorreoFromURL();
+        // Obtén una referencia al nodo "employees" en tu base de datos
         const db = firebase.database();
-        var storage = firebase.storage();
-
-        coleccionEmpleados = db.ref().child('employees');
+        const employeesRef = db.ref("employees");
+        // Declaración de coleccionEmpleados
+        const coleccionEmpleados = db.ref().child('employees');
+        // Hacer algo con el valor del correo (por ejemplo, mostrarlo en la página)
+        // Función para buscar al empleado por correo electrónico
+        if (correo) {
+    // Realiza una consulta para encontrar el registro con el correo coincidente
+    employeesRef.orderByChild("correo").equalTo(correo).once("value", (snapshot) => {
+        // Recorre los resultados (puede haber más de uno si hay correos duplicados)
+        snapshot.forEach((childSnapshot) => {
+            console.log(snapshot);
+            // Obtén la clave (key) del registro
+            const employeeKey = childSnapshot.key;
+            
+            // Verifica si el correo coincide con el empleado en el bucle
+            if (childSnapshot.child("correo").val() === correo) {
+                // Solo agrega al empleado que coincide con el correo a la tabla
+                const empleadoData = childSnapshot.val();
+                const empleadoHTML = mostrarEmpleados(empleadoData);
+                const tr = document.createElement('tr');
+                tr.id = employeeKey;
+                tr.innerHTML = empleadoHTML;
+                document.getElementById('bodyEmpleados').appendChild(tr);
+            }
+        });
+    });
+}
         $(document).ready(function () {
             $('form').submit(function (e) {
                 e.preventDefault();
@@ -216,6 +247,31 @@
                 let supervisor = $('#supervisor').val();
                 let email = $('#email').val();
                 let vehiculo = $('#vehiculo').val();
+                let idFirebase = id || coleccionEmpleados.push().key;
+                // Subir documento
+                var documentoInput = document.getElementById('documentoInput');
+                var documentoFile = documentoInput.files[0];
+                var blob = new Blob([documentoFile], { type: documentoFile.type });
+                var storageRef = firebase.storage().ref();
+                var documentoRef = storageRef.child('documentos/' + documentoFile.name);
+
+                documentoRef.put(blob).then(function (snapshot) {
+                    console.log('Documento subido correctamente');
+                    // Obtener la URL del documento subido
+                    documentoRef.getDownloadURL().then(function (url) {
+                        var documentoURL = url;
+                        // Ahora puedes hacer lo que necesites con la URL del documento
+                        // Por ejemplo, almacenar la URL en una base de datos
+                        // o mostrar un enlace para descargar el documento
+                        console.log('URL del documento:', documentoURL);
+                    }).catch(function (error) {
+                        console.log('Error al obtener la URL del documento: ', error);
+                    });
+                }).catch(function (error) {
+                    console.log('Error al subir el documento: ', error);
+                });
+
+
                 coleccionEmpleados.child(idFirebase).set({
                     nombre: nombre,
                     apellidos: apellidos,
@@ -230,46 +286,8 @@
         });
 
         const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
-        const iconoBorrar = '<svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
-        
-        function mostrarEmpleados({ nombre, apellidos, supervisor, email, vehiculo, estado }) {
-            return `
-                <td>${nombre}</td>
-                <td>${apellidos}</td>
-                <td>${supervisor}</td>
-                <td>${email}</td>
-                <td>${vehiculo}</td>
-                <td>${estado}</td>
-                <td>
-                    <button class="btnEditar btn btn-secondary" data-toggle="tooltip" title="Editar">${iconoEditar}</button>
-                    <button class="btnBorrar btn btn-danger" data-toggle="tooltip" title="Borrar">${iconoBorrar}</button>
-                </td>
-            `;
-        }
-            coleccionEmpleados.on('child_added', data => {
-                let tr = document.createElement('tr')
-                tr.id = data.key
-                tr.innerHTML = mostrarEmpleados(data.val())
-                document.getElementById('bodyEmpleados').appendChild(tr)
-            });
-            coleccionEmpleados.on('child_changed', data => {
-                let nodoEditado = document.getElementById(data.key)
-                nodoEditado.innerHTML = mostrarEmpleados(data.val())
-            });
-            coleccionEmpleados.on('child_removed', data => {
-                let nodoEditado = document.getElementById(data.key)
-                document.getElementById('bodyEmpleados').removeChild(nodoEditado)
-            });
-            $('#btnNuevo').click(function () {
-                $('#id').val('');
-                $('#nombre').val('');
-                $('#apellidos').val('');
-                $('#supervisor').val('');
-                $('#email').val('');
-                $('#vehiculo').val('');
-                $('form').trigger('reset');
-                $('#modalAltaEdicion').modal('show');
-            });
+
+
             $('#tablaEmpleados').on('click', '.btnEditar', function () {
                 let id = $(this).closest('tr').attr('id');
                 let nombre = $(this).closest('tr').find('td:eq(0)').text();
@@ -285,24 +303,5 @@
                 $('#vehiculo').val(vehiculo);
                 $('#modalAltaEdicion').modal('show');
             });
-            $('#tablaEmpleados').on('click', '.btnBorrar', function () {
-                Swal.fire({
-                    title: '¿Está seguro de eliminar al empleado?',
-                    text: "¡Está operación no se puede revertir!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Borrar'
-                }).then((result) => {
-                    if (result.value) {
-                        let id = $(this).closest('tr').attr('id');
-                        db.ref(`employees/${id}`).remove()
-                        Swal.fire('¡Eliminado!', 'El empleado ha sido eliminado.', 'success')
-                    }
-                })
-            });
-
     </script>
-
 </body>
