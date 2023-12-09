@@ -94,7 +94,7 @@
         <nav>
         </nav>
     </header>
-    
+
     <div class="container">
         <div class="row">
             <div class="col-lg-10">
@@ -229,6 +229,11 @@
                             <label for="cantidadReabastecer">Cantidad:</label>
                             <input type="number" class="form-control" id="cantidadReabastecer" placeholder="Ingrese la cantidad">
                         </div>
+                    </div>
+                     <!-- Lista de productos seleccionados -->
+                     <div class="form-group">
+                        <label>Productos seleccionados:</label>
+                        <ul id="listaProductosSeleccionados"></ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -411,6 +416,7 @@
                 //$('#imageInput').val(imagen);
                 $('#modalAltaEdicion').modal('show');
             });
+
             $('#tablaProductos').on('click', '.btnBorrar', function () {
                 Swal.fire({
                     title: '¿Está seguro de eliminar el producto?',
@@ -454,8 +460,8 @@
                 });
             }
 
-                        // Agregar este código al final del script
-            $('#btnReabastecer').click(function () {
+               // Agregar este código al final del script
+               $('#btnReabastecer').click(function () {
                 // Limpiar opciones anteriores
                 $('#productosReabastecer').empty();
 
@@ -525,7 +531,6 @@
                     alert('No se encontraron productos seleccionados para reabastecer.');
                 }
             });
-
     </script>
 
 </body>
