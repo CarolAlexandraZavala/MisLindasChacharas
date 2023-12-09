@@ -177,7 +177,7 @@
 
                                 <!-- Botones de la tabla -->
                     <button id="btnReabastecer" class="btn btn-primary" data-toggle="modal" data-target="#modalReabastecer">Reabastecimiento de Productos</button>
-                    <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Producto">Agregarnuevo Producto</button>
+                    <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Producto">Agregar nuevo Producto</button>
                     
                 <div class="tablita">
                     <table id="tablaProductos" class="table table-bordered">
@@ -229,6 +229,7 @@
                             <label for="cantidadReabastecer">Cantidad:</label>
                             <input type="number" class="form-control" id="cantidadReabastecer" placeholder="Ingrese la cantidad">
                         </div>
+                        <button type="button" id="btnAgregar" class="btn btn-primary">Agregar</button>
                     </div>
                      <!-- Lista de productos seleccionados -->
                      <div class="form-group">
@@ -237,7 +238,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Generar Archivo</button>
+                        <button id="btnReabastecimiento" type="button" class="btn btn-success">Reabastecer</button>
                     </div>
                 </form>
             </div>
@@ -472,64 +473,54 @@
                     $('#productosReabastecer').append(option);
                 });
             });
-
-            $('#formReabastecer').submit(function (e) {
-                e.preventDefault();
-
-                // Obtener datos del formulario
-                const productosSeleccionados = $('#productosReabastecer').val();
+            let productosSeleccionadosGlobales = []; // Lista global de productos seleccionados
+            // Primero hago que agrege los valores para verlos debajo uno por uno para generar el json de ese modal especificamente
+            $('#btnAgregar').click(function () {
+                const productoSeleccionado = $('#productosReabastecer').val();
                 const cantidadReabastecer = parseInt($('#cantidadReabastecer').val());
 
-                // Verificar que se haya seleccionado al menos un producto
-                if (!productosSeleccionados || productosSeleccionados.length === 0) {
-                    alert('Seleccione al menos un producto para reabastecer.');
+                if (!productoSeleccionado || productoSeleccionado.length === 0) {
+                    alert('Seleccione un producto para reabastecer.');
                     return;
                 }
 
-                // Verificar que la cantidad sea un número válido
                 if (isNaN(cantidadReabastecer) || cantidadReabastecer <= 0) {
                     alert('Ingrese una cantidad válida para reabastecer.');
                     return;
                 }
 
-                // Filtrar productos seleccionados
-                const productosReabastecer = [];
-                $('#tablaProductos tbody tr').each(function () {
-                    const nombreProducto = $(this).find('td:eq(1)').text();
-                    if (productosSeleccionados.includes(nombreProducto)) {
-                        const producto = {
-                            nombre: nombreProducto,
-                            cantidad: cantidadReabastecer,
-                        };
-                        productosReabastecer.push(producto);
-                    }
-                });
+                // Agregar producto y cantidad a la lista global
+                productosSeleccionadosGlobales.push({ nombre: productoSeleccionado, cantidad: cantidadReabastecer });
 
-                // Generar el archivo con la información
-                if (productosReabastecer.length > 0) {
-                    const contenidoArchivo = JSON.stringify(productosReabastecer, null, 2);
+                // Actualizar la lista visible
+                const listaProductos = $('#listaProductosSeleccionados');
+                listaProductos.append(`<li>${productoSeleccionado} - Cantidad: ${cantidadReabastecer}</li>`);
+                console.log(productosSeleccionadosGlobales); // Muestra la lista actualizada
+            });
 
-                    // Crear un Blob con el contenido
-                    const blob = new Blob([contenidoArchivo], { type: 'application/json' });
+            $('#btnReabastecimiento').click(function () {
+                console.log(productosSeleccionadosGlobales); // Muestra la lista de productos seleccionados
+                const contenidoArchivo = JSON.stringify(productosSeleccionadosGlobales);
+                console.log("Se envía lo siguiente:", contenidoArchivo); // Esto mostrará los datos que se están enviando
+                fetch('/api/reabastecer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: contenidoArchivo
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Correo enviado:', data);
+                    // Lógica adicional después de enviar el correo
+                })
+                .catch(error => console.error('Error:', error));
 
-                    // Crear un objeto URL para el Blob
-                    const url = URL.createObjectURL(blob);
-
-                    // Crear un enlace y hacer clic para descargar el archivo
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'productos_reabastecer.json';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-
-                    // Limpiar el formulario después de la descarga
-                    $('#productosReabastecer').val([]);
-                    $('#cantidadReabastecer').val('');
-                    $('#modalReabastecer').modal('hide');
-                } else {
-                    alert('No se encontraron productos seleccionados para reabastecer.');
-                }
+                // Limpiar el formulario y la lista
+                $('#productosReabastecer').val([]);
+                $('#cantidadReabastecer').val('');
+                listaProductosSeleccionados = []; // Limpia la lista de productos seleccionados
+                $('#modalReabastecer').modal('hide');
             });
     </script>
 
