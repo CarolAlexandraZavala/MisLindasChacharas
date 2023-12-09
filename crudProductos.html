@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,103 +11,95 @@
     <link rel="stylesheet" href="css/styles-icons.css">
     <link rel="stylesheet" href="css/styles-index.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="path/to/your/custom.css"> <!-- Add your custom CSS file here -->
+
     <style>
         .tablita {
-      display: inline-block;
-    }
+            display: inline-block;
+        }
 
-    /*Tabla Estilos*/
-    .tabla {
-      border-collapse: collapse;
-      /*Esta propiedad hace que parezca mas una tabla*/
-      font-family: 'Quicksand', sans-serif;
-    }
+        /* Table Styles */
+        .tabla {
+            border-collapse: collapse;
+            font-family: 'Quicksand', sans-serif;
+        }
 
-    table tr th {
-      border: 1px solid #D5D9D9;
-      width: 200px;
-      height: 50px;
-      color: white;
-      background-color: rgb(133, 71, 122);
-    }
+        table tr th {
+            border: 1px solid #D5D9D9;
+            width: 200px;
+            height: 50px;
+            color: white;
+            background-color: rgb(58, 33, 53);
+        }
 
-    /* Para el estilo de las nuevas celdas */
-    td {
-      border: 1px solid #000000;
-      width: 100px;
-      height: 25px;
-    }
-    .submit {
-      padding: 17px 40px;
-      border-radius: 10px;
-      border: 0;
-      background-color: rgb(133, 71, 122);
-      letter-spacing: 1.5px;
-      font-size: 20px;
-      transition: all .3s ease;
-      box-shadow: rgb(133, 71, 122) 0px 10px 0px 0px;
-      color: hsl(0, 0%, 100%);
-    }
+        /* Styles for new cells */
+        td {
+            border: 1px solid #000000;
+            width: 100px;
+            height: 25px;
+        }
 
-    .submit:hover {
-      box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
-    }
+        /* Common styles for buttons */
+        .submit,
+        #btnReabastecer {
+            padding: 17px 40px;
+            border-radius: 10px;
+            border: 0;
+            background-color: rgb(133, 71, 122);
+            letter-spacing: 1.5px;
+            font-size: 20px;
+            transition: all .3s ease;
+            box-shadow: rgb(133, 71, 122) 0px 10px 0px 0px;
+            color: hsl(0, 0%, 100%);
+        }
 
-    .submit:active {
-      background-color: rgb(133, 71, 122);
-      /*50, 168, 80*/
-      box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
-      transform: translateY(5px);
-      transition: 200ms;
-    }
+        /* Button Reabastecimiento specific style */
+        #btnReabastecer {
+            margin-left: 400px; /* Adjust margin as needed */
+        }
 
-    .submit2 {
-      padding: 15px 15px;
-      border-radius: 10px;
-      border: 0;
-      background-color: rgb(133, 71, 122);
-      letter-spacing: 1.5px;
-      font-size: 20px;
-      transition: all .3s ease;
-      box-shadow: rgb(133, 71, 122);
-      color: hsl(0, 0%, 100%);
-    }
+        /* Redundant style (submit2:active), consider removing */
+        .submit2:active {
+            background-color: rgb(133, 71, 122);
+            box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
+            transform: translateY(5px);
+            transition: 200ms;
+        }
 
-    .submit2:hover {
-      box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
-    }
+        /* Add these styles to your CSS file */
+        .menos-20 {
+            background-color: rgb(236, 65, 65);
+        }
 
-    .submit2:active {
-      background-color: rgb(133, 71, 122);
-      /*50, 168, 80*/
-      box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
-      transform: translateY(5px);
-      transition: 200ms;
-    }
+        .menos-50 {
+            background-color: rgb(243, 135, 35);
+        }
+
+        .menos-100 {
+            background-color: rgb(173, 173, 7);
+        }
     </style>
 </head>
 
 <body>
     <!--Nav-->
-    <header class="p-3 d-flex flex-column flex-md-row justify-content-between align-items-center border-bottom "
+    <header class="p-3 d-flex flex-column flex-md-row justify-content-between align-items-center border-bottom"
         style="background-color: rgb(133, 71, 122);">
         <a href="index_admin.html">
             <h5 class="mt-1 title text-white">Regresar</h5>
         </a>
-        <a>
-            <center>
-                <h5 class="mt-1 title text-white">PRODUCTOS</h5>
-            </center>
-        </a>
+        <center>
+            <h5 class="mt-1 title text-white">PRODUCTOS</h5>
+        </center>
         <nav>
         </nav>
     </header>
+    
     <div class="container">
         <div class="row">
             <div class="col-lg-10">
                 <br />
-                <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Producto">Agregar
-                    nuevo Producto</button>
+
                 <!--Modal-->
                 <div id="modalAltaEdicion" class="modal fade" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -183,6 +175,10 @@
                 </div>
                 <br />
 
+                                <!-- Botones de la tabla -->
+                    <button id="btnReabastecer" class="btn btn-primary" data-toggle="modal" data-target="#modalReabastecer">Reabastecimiento de Productos</button>
+                    <button id="btnNuevo" class="submit" data-toggle="tooltip" title="Nuevo Producto">Agregarnuevo Producto</button>
+                    
                 <div class="tablita">
                     <table id="tablaProductos" class="table table-bordered">
                         <thead>
@@ -209,6 +205,39 @@
             </div>
         </div>
     </div>
+
+            <!-- Agregar este formulario modal después de la tabla -->
+        <div class="modal fade" id="modalReabastecer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-light">
+                    <h5 class="modal-title" id="exampleModalLabel">Reabastecimiento de Productos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formReabastecer">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="productosReabastecer">Seleccione productos:</label>
+                            <select id="productosReabastecer" class="form-control" multiple>
+                                <!-- Opciones de productos se llenarán dinámicamente con JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cantidadReabastecer">Cantidad:</label>
+                            <input type="number" class="form-control" id="cantidadReabastecer" placeholder="Ingrese la cantidad">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Generar Archivo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -293,9 +322,18 @@
         const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
         const iconoBorrar = '<svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
         
-        function mostrarProductos({ identificador, nombre, categoria, descripcion, cantidad, precio, paypal, altura, ancho, longitud, peso, imagen }) {
+                function mostrarProductos({ identificador, nombre, categoria, descripcion, cantidad, precio, paypal, altura, ancho, longitud, peso, imagen }) {
+                let cantidadClass = '';
+                if (cantidad < 20) {
+                    cantidadClass = 'menos-20';
+                } else if (cantidad < 50) {
+                    cantidadClass = 'menos-50';
+                } else if (cantidad < 100) {
+                    cantidadClass = 'menos-100';
+                }
+
                 return `
-                    <td>${identificador}</td>
+                    <td class="${cantidadClass}">${identificador}</td>
                     <td>${nombre}</td>
                     <td>${categoria}</td>
                     <td>${descripcion}</td>
@@ -308,8 +346,10 @@
                     <td>${peso}</td>
                     <td><img src=${imagen} alt=${nombre} width="20" height="20"></td>
                     <td><button class="btnEditar btn btn-secondary" data-toggle="tooltip" title="Editar">${iconoEditar}</button><button class="btnBorrar btn btn-danger" data-toggle="tooltip" title="Borrar">${iconoBorrar}</button></td>
-                `
-            };
+                `;
+            }
+
+
             coleccionProductos.on('child_added', data => {
                 let tr = document.createElement('tr')
                 tr.id = data.key
@@ -389,6 +429,104 @@
                 })
             });
 
+            coleccionProductos.on('child_changed', data => {
+                let nodoEditado = document.getElementById(data.key);
+                nodoEditado.innerHTML = mostrarProductos(data.val());
+
+                // Actualizar colores después de editar
+                actualizarColoresCantidad();
+            });
+
+            // Función para actualizar colores de cantidad
+            function actualizarColoresCantidad() {
+                $('.cantidad').each(function () {
+                    let cantidad = parseInt($(this).text());
+                    if (cantidad < 20) {
+                        $(this).css('color', 'red'); // Puedes ajustar el color según tus preferencias
+                    } else if (cantidad < 50) {
+                        $(this).css('color', 'orange');
+                    } else if (cantidad < 100) {
+                        $(this).css('color', 'yellow');
+                    } else {
+                        // Establecer el color predeterminado o el que prefieras
+                        $(this).css('color', 'black');
+                    }
+                });
+            }
+
+                        // Agregar este código al final del script
+            $('#btnReabastecer').click(function () {
+                // Limpiar opciones anteriores
+                $('#productosReabastecer').empty();
+
+                // Llenar dinámicamente las opciones de productos
+                $('#tablaProductos tbody tr').each(function () {
+                    const nombreProducto = $(this).find('td:eq(1)').text();
+                    const option = `<option value="${nombreProducto}">${nombreProducto}</option>`;
+                    $('#productosReabastecer').append(option);
+                });
+            });
+
+            $('#formReabastecer').submit(function (e) {
+                e.preventDefault();
+
+                // Obtener datos del formulario
+                const productosSeleccionados = $('#productosReabastecer').val();
+                const cantidadReabastecer = parseInt($('#cantidadReabastecer').val());
+
+                // Verificar que se haya seleccionado al menos un producto
+                if (!productosSeleccionados || productosSeleccionados.length === 0) {
+                    alert('Seleccione al menos un producto para reabastecer.');
+                    return;
+                }
+
+                // Verificar que la cantidad sea un número válido
+                if (isNaN(cantidadReabastecer) || cantidadReabastecer <= 0) {
+                    alert('Ingrese una cantidad válida para reabastecer.');
+                    return;
+                }
+
+                // Filtrar productos seleccionados
+                const productosReabastecer = [];
+                $('#tablaProductos tbody tr').each(function () {
+                    const nombreProducto = $(this).find('td:eq(1)').text();
+                    if (productosSeleccionados.includes(nombreProducto)) {
+                        const producto = {
+                            nombre: nombreProducto,
+                            cantidad: cantidadReabastecer,
+                        };
+                        productosReabastecer.push(producto);
+                    }
+                });
+
+                // Generar el archivo con la información
+                if (productosReabastecer.length > 0) {
+                    const contenidoArchivo = JSON.stringify(productosReabastecer, null, 2);
+
+                    // Crear un Blob con el contenido
+                    const blob = new Blob([contenidoArchivo], { type: 'application/json' });
+
+                    // Crear un objeto URL para el Blob
+                    const url = URL.createObjectURL(blob);
+
+                    // Crear un enlace y hacer clic para descargar el archivo
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'productos_reabastecer.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    // Limpiar el formulario después de la descarga
+                    $('#productosReabastecer').val([]);
+                    $('#cantidadReabastecer').val('');
+                    $('#modalReabastecer').modal('hide');
+                } else {
+                    alert('No se encontraron productos seleccionados para reabastecer.');
+                }
+            });
+
     </script>
 
 </body>
+</html>
