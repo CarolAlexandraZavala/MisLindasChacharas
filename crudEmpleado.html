@@ -106,46 +106,25 @@
         <div class="row">
             <div class="col-lg-10">
                 <br />
-                <!--Modal-->
-                <div id="modalAltaEdicion" class="modal fade" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div id="modalEditarEstadoVehiculo" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-dark text-light">
-                                <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Editar Estado del Vehículo</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form>
+                            <form id="formEditarEstadoVehiculo">
                                 <div class="modal-body">
-                                    <input id="id" type="hidden">
                                     <div class="form-group">
-                                        <label>Nombre</label>
-                                        <input id="nombre" type="text" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Apellidos</label>
-                                        <input id="apellidos" type="text" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Supervisor</label>
-                                        <input id="supervisor" type="text" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input id="email" type="email" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Vehiculo</label>
-                                        <input id="vehiculo" type="text" class="form-control" required>
+                                        <label>Documento Relacionado</label>
+                                        <input id="documentoInput" type="file" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                        tabindex="2">Cancelar</button>
-                                    <button type="submit" id="btnGuardar" class="btn btn-success"
-                                        translate="1">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                                 </div>
                             </form>
                         </div>
@@ -206,102 +185,89 @@
             measurementId: "G-R340PVF1GK"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        // Llamar a la función para obtener el correo de la URL
-        const correo = getCorreoFromURL();
-        // Obtén una referencia al nodo "employees" en tu base de datos
-        const db = firebase.database();
-        const employeesRef = db.ref("employees");
-        // Declaración de coleccionEmpleados
-        const coleccionEmpleados = db.ref().child('employees');
-        // Hacer algo con el valor del correo (por ejemplo, mostrarlo en la página)
-        // Función para buscar al empleado por correo electrónico
-        if (correo) {
-    // Realiza una consulta para encontrar el registro con el correo coincidente
-    employeesRef.orderByChild("correo").equalTo(correo).once("value", (snapshot) => {
-        // Recorre los resultados (puede haber más de uno si hay correos duplicados)
-        snapshot.forEach((childSnapshot) => {
-            console.log(snapshot);
-            // Obtén la clave (key) del registro
-            const employeeKey = childSnapshot.key;
-            
-            // Verifica si el correo coincide con el empleado en el bucle
-            if (childSnapshot.child("correo").val() === correo) {
-                // Solo agrega al empleado que coincide con el correo a la tabla
-                const empleadoData = childSnapshot.val();
-                const empleadoHTML = mostrarEmpleados(empleadoData);
-                const tr = document.createElement('tr');
-                tr.id = employeeKey;
-                tr.innerHTML = empleadoHTML;
-                document.getElementById('bodyEmpleados').appendChild(tr);
+        firebase.initializeApp(firebaseConfig);// Función para obtener el correo de la URL
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Obtener el correo de la URL
+        var correo = getParameterByName('correo');
+
+        // Referencia a la colección de empleados
+        var ref = firebase.database().ref("employees");
+        const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
+        // Buscar empleados por correo
+        ref.orderByChild("email").equalTo(correo).on("value", function(snapshot) {
+            var empleados = snapshot.val();
+            if (empleados) {
+                var html = "";
+                for (var id in empleados) {
+                    var empleado = empleados[id];
+                    html += "<tr>";
+                    html += "<td>" + empleado.nombre + "</td>";
+                    html += "<td>" + empleado.apellidos + "</td>";
+                    html += "<td>" + empleado.supervisor + "</td>";
+                    html += "<td>" + empleado.email + "</td>";
+                    html += "<td>" + empleado.vehiculo + "</td>";
+                    // Si existe una URL del documento, crea un enlace para visualizarlo
+                    if (empleado.documentoURL) {
+                        html += `<td><a href="${empleado.documentoURL}"target="_blank">Ver estado del vehiculo</a></td>`;
+                    } else {
+                        html += "<td>No disponible</td>";
+                    }
+                    // Incorpora el iconoEditar en el botón
+                    html += `<td><button onclick='editarEstadoVehiculo("${id}")'>${iconoEditar}</button></td>`;
+                    html += "</tr>";
+                }
+                document.getElementById("bodyEmpleados").innerHTML = html;
             }
         });
-    });
-}
-        $(document).ready(function () {
-            $('form').submit(function (e) {
-                e.preventDefault();
-                let id = $('#id').val();
-                let nombre = $('#nombre').val();
-                let apellidos = $('#apellidos').val();
-                let supervisor = $('#supervisor').val();
-                let email = $('#email').val();
-                let vehiculo = $('#vehiculo').val();
-                let idFirebase = id || coleccionEmpleados.push().key;
-                // Subir documento
-                var documentoInput = document.getElementById('documentoInput');
-                var documentoFile = documentoInput.files[0];
-                var blob = new Blob([documentoFile], { type: documentoFile.type });
-                var storageRef = firebase.storage().ref();
-                var documentoRef = storageRef.child('documentos/' + documentoFile.name);
+        // Función para abrir el modal y preparar para editar
+        function editarEstadoVehiculo(empleadoOrder) {
+            // Guarda la orden del empleado en una variable global para usarla después en la carga
+            window.empleadoOrderParaEditar = empleadoOrder;
+            // Abre el modal que contiene el formulario de carga
+            $('#modalEditarEstadoVehiculo').modal('show');
+        }
 
-                documentoRef.put(blob).then(function (snapshot) {
-                    console.log('Documento subido correctamente');
-                    // Obtener la URL del documento subido
-                    documentoRef.getDownloadURL().then(function (url) {
-                        var documentoURL = url;
-                        // Ahora puedes hacer lo que necesites con la URL del documento
-                        // Por ejemplo, almacenar la URL en una base de datos
-                        // o mostrar un enlace para descargar el documento
-                        console.log('URL del documento:', documentoURL);
-                    }).catch(function (error) {
-                        console.log('Error al obtener la URL del documento: ', error);
+        // Agrega un event listener al formulario en el modal para manejar la carga
+        document.getElementById('formEditarEstadoVehiculo').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Referencia al archivo seleccionado por el usuario
+            var documento = document.getElementById('documentoInput').files[0];
+            // Referencia a la ubicación del documento en Firebase Storage
+            var documentoRef = firebase.storage().ref('documentos/' + documento.name);
+
+            // Sube el documento a Firebase Storage
+            documentoRef.put(documento).then(function(snapshot) {
+                console.log('Documento subido con éxito');
+                
+                // Obtén la URL del documento
+                documentoRef.getDownloadURL().then(function(url) {
+                    // Referencia al empleado en Firebase Database
+                    var empleadoRef = firebase.database().ref('employees/' + window.empleadoOrderParaEditar);
+                    
+                    // Actualiza la URL del documento en la base de datos
+                    empleadoRef.update({
+                        documentoURL: url // Guarda la URL del documento
+                    }).then(function() {
+                        console.log('URL del documento actualizada con éxito');
+                        // Cerrar el modal y limpiar el formulario
+                        $('#modalEditarEstadoVehiculo').modal('hide');
+                        document.getElementById('formEditarEstadoVehiculo').reset();
+                    }).catch(function(error) {
+                        console.log('Error al actualizar la base de datos', error);
                     });
-                }).catch(function (error) {
-                    console.log('Error al subir el documento: ', error);
                 });
-
-
-                coleccionEmpleados.child(idFirebase).set({
-                    nombre: nombre,
-                    apellidos: apellidos,
-                    supervisor: supervisor,
-                    email: email,
-                    vehiculo: vehiculo
-                });
-
-                $('#modalAltaEdicion').modal('hide');
-                $('form').trigger('reset');
+            }).catch(function(error) {
+                console.log('Error al subir el documento', error);
             });
         });
-
-        const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
-
-
-            $('#tablaEmpleados').on('click', '.btnEditar', function () {
-                let id = $(this).closest('tr').attr('id');
-                let nombre = $(this).closest('tr').find('td:eq(0)').text();
-                let apellidos = $(this).closest('tr').find('td:eq(1)').text();
-                let supervisor = $(this).closest('tr').find('td:eq(2)').text();
-                let email = $(this).closest('tr').find('td:eq(3)').text();
-                let vehiculo = $(this).closest('tr').find('td:eq(4)').text();
-                $('#id').val(id);
-                $('#nombre').val(nombre);
-                $('#apellidos').val(apellidos);
-                $('#supervisor').val(supervisor);
-                $('#email').val(email);
-                $('#vehiculo').val(vehiculo);
-                $('#modalAltaEdicion').modal('show');
-            });
     </script>
 </body>
