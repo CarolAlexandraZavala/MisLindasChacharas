@@ -13,77 +13,78 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         .tablita {
-      display: inline-block;
-    }
+            display: inline-block;
+        }
 
-    /*Tabla Estilos*/
-    .tabla {
-      border-collapse: collapse;
-      /*Esta propiedad hace que parezca mas una tabla*/
-      font-family: 'Quicksand', sans-serif;
-    }
+        /*Tabla Estilos*/
+        .tabla {
+            border-collapse: collapse;
+            /*Esta propiedad hace que parezca mas una tabla*/
+            font-family: 'Quicksand', sans-serif;
+        }
 
-    table tr th {
-      border: 1px solid #D5D9D9;
-      width: 200px;
-      height: 50px;
-      color: white;
-      background-color: rgb(133, 71, 122);
-    }
+        table tr th {
+            border: 1px solid #D5D9D9;
+            width: 200px;
+            height: 50px;
+            color: white;
+            background-color: rgb(133, 71, 122);
+        }
 
-    /* Para el estilo de las nuevas celdas */
-    td {
-      border: 1px solid #000000;
-      width: 100px;
-      height: 25px;
-    }
-    .submit {
-      padding: 17px 40px;
-      border-radius: 10px;
-      border: 0;
-      background-color: rgb(133, 71, 122);
-      letter-spacing: 1.5px;
-      font-size: 20px;
-      transition: all .3s ease;
-      box-shadow: rgb(133, 71, 122) 0px 10px 0px 0px;
-      color: hsl(0, 0%, 100%);
-    }
+        /* Para el estilo de las nuevas celdas */
+        td {
+            border: 1px solid #000000;
+            width: 100px;
+            height: 25px;
+        }
 
-    .submit:hover {
-      box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
-    }
+        .submit {
+            padding: 17px 40px;
+            border-radius: 10px;
+            border: 0;
+            background-color: rgb(133, 71, 122);
+            letter-spacing: 1.5px;
+            font-size: 20px;
+            transition: all .3s ease;
+            box-shadow: rgb(133, 71, 122) 0px 10px 0px 0px;
+            color: hsl(0, 0%, 100%);
+        }
 
-    .submit:active {
-      background-color: rgb(133, 71, 122);
-      /*50, 168, 80*/
-      box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
-      transform: translateY(5px);
-      transition: 200ms;
-    }
+        .submit:hover {
+            box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
+        }
 
-    .submit2 {
-      padding: 15px 15px;
-      border-radius: 10px;
-      border: 0;
-      background-color: rgb(133, 71, 122);
-      letter-spacing: 1.5px;
-      font-size: 20px;
-      transition: all .3s ease;
-      box-shadow: rgb(133, 71, 122);
-      color: hsl(0, 0%, 100%);
-    }
+        .submit:active {
+            background-color: rgb(133, 71, 122);
+            /*50, 168, 80*/
+            box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
+            transform: translateY(5px);
+            transition: 200ms;
+        }
 
-    .submit2:hover {
-      box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
-    }
+        .submit2 {
+            padding: 15px 15px;
+            border-radius: 10px;
+            border: 0;
+            background-color: rgb(133, 71, 122);
+            letter-spacing: 1.5px;
+            font-size: 20px;
+            transition: all .3s ease;
+            box-shadow: rgb(133, 71, 122);
+            color: hsl(0, 0%, 100%);
+        }
 
-    .submit2:active {
-      background-color: rgb(133, 71, 122);
-      /*50, 168, 80*/
-      box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
-      transform: translateY(5px);
-      transition: 200ms;
-    }
+        .submit2:hover {
+            box-shadow: rgb(133, 71, 122) 0px 7px 0px 0px;
+        }
+
+        .submit2:active {
+            background-color: rgb(133, 71, 122);
+            /*50, 168, 80*/
+            box-shadow: rgb(133, 71, 122) 0px 0px 0px 0px;
+            transform: translateY(5px);
+            transition: 200ms;
+        }
     </style>
 </head>
 
@@ -186,11 +187,13 @@
         crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.4/dist/sweetalert2.all.min.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-compat.js"></script>
 
     <script>
+
         var firebaseConfig = {
             apiKey: "AIzaSyBI0cViactxg-q1o6tPvTfXPFxyKvCIwAg",
             authDomain: "chacharas-c6ec7.firebaseapp.com",
@@ -210,13 +213,21 @@
         $(document).ready(function () {
             $('form').submit(function (e) {
                 e.preventDefault();
-                let id = $('#id').val();
+
                 let nombre = $('#nombre').val();
                 let apellidos = $('#apellidos').val();
                 let supervisor = $('#supervisor').val();
                 let email = $('#email').val();
                 let vehiculo = $('#vehiculo').val();
-                coleccionEmpleados.child(idFirebase).set({
+
+                // Use push to generate a unique key
+                let newEmpleadoRef = coleccionEmpleados.push();
+
+                // Get the key generated by push
+                let id = newEmpleadoRef.key;
+
+                // Set the data in the newly generated child
+                newEmpleadoRef.set({
                     nombre: nombre,
                     apellidos: apellidos,
                     supervisor: supervisor,
@@ -229,15 +240,17 @@
             });
         });
 
+
+
         const iconoEditar = '<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>';
         const iconoBorrar = '<svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
-        
+
         function mostrarEmpleados({ nombre, apellidos, supervisor, email, vehiculo, documentoURL }) {
             // Verifica si la URL del documento existe y es no nula
-            const enlaceDocumento = documentoURL 
-                ? `<a href="${documentoURL}" target="_blank">Ver estado del vehiculo</a>` 
+            const enlaceDocumento = documentoURL
+                ? `<a href="${documentoURL}" target="_blank">Ver estado del vehiculo</a>`
                 : 'No disponible';
-            
+
             return `
                 <td>${nombre}</td>
                 <td>${apellidos}</td>
@@ -251,62 +264,62 @@
                 </td>
             `;
         }
-            coleccionEmpleados.on('child_added', data => {
-                let tr = document.createElement('tr')
-                tr.id = data.key
-                tr.innerHTML = mostrarEmpleados(data.val())
-                document.getElementById('bodyEmpleados').appendChild(tr)
-            });
-            coleccionEmpleados.on('child_changed', data => {
-                let nodoEditado = document.getElementById(data.key)
-                nodoEditado.innerHTML = mostrarEmpleados(data.val())
-            });
-            coleccionEmpleados.on('child_removed', data => {
-                let nodoEditado = document.getElementById(data.key)
-                document.getElementById('bodyEmpleados').removeChild(nodoEditado)
-            });
-            $('#btnNuevo').click(function () {
-                $('#id').val('');
-                $('#nombre').val('');
-                $('#apellidos').val('');
-                $('#supervisor').val('');
-                $('#email').val('');
-                $('#vehiculo').val('');
-                $('form').trigger('reset');
-                $('#modalAltaEdicion').modal('show');
-            });
-            $('#tablaEmpleados').on('click', '.btnEditar', function () {
-                let id = $(this).closest('tr').attr('id');
-                let nombre = $(this).closest('tr').find('td:eq(0)').text();
-                let apellidos = $(this).closest('tr').find('td:eq(1)').text();
-                let supervisor = $(this).closest('tr').find('td:eq(2)').text();
-                let email = $(this).closest('tr').find('td:eq(3)').text();
-                let vehiculo = $(this).closest('tr').find('td:eq(4)').text();
-                $('#id').val(id);
-                $('#nombre').val(nombre);
-                $('#apellidos').val(apellidos);
-                $('#supervisor').val(supervisor);
-                $('#email').val(email);
-                $('#vehiculo').val(vehiculo);
-                $('#modalAltaEdicion').modal('show');
-            });
-            $('#tablaEmpleados').on('click', '.btnBorrar', function () {
-                Swal.fire({
-                    title: '¿Está seguro de eliminar al empleado?',
-                    text: "¡Está operación no se puede revertir!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Borrar'
-                }).then((result) => {
-                    if (result.value) {
-                        let id = $(this).closest('tr').attr('id');
-                        db.ref(`employees/${id}`).remove()
-                        Swal.fire('¡Eliminado!', 'El empleado ha sido eliminado.', 'success')
-                    }
-                })
-            });
+        coleccionEmpleados.on('child_added', data => {
+            let tr = document.createElement('tr')
+            tr.id = data.key
+            tr.innerHTML = mostrarEmpleados(data.val())
+            document.getElementById('bodyEmpleados').appendChild(tr)
+        });
+        coleccionEmpleados.on('child_changed', data => {
+            let nodoEditado = document.getElementById(data.key)
+            nodoEditado.innerHTML = mostrarEmpleados(data.val())
+        });
+        coleccionEmpleados.on('child_removed', data => {
+            let nodoEditado = document.getElementById(data.key)
+            document.getElementById('bodyEmpleados').removeChild(nodoEditado)
+        });
+        $('#btnNuevo').click(function () {
+            $('#id').val('');
+            $('#nombre').val('');
+            $('#apellidos').val('');
+            $('#supervisor').val('');
+            $('#email').val('');
+            $('#vehiculo').val('');
+            $('form').trigger('reset');
+            $('#modalAltaEdicion').modal('show');
+        });
+        $('#tablaEmpleados').on('click', '.btnEditar', function () {
+            let id = $(this).closest('tr').attr('id');
+            let nombre = $(this).closest('tr').find('td:eq(0)').text();
+            let apellidos = $(this).closest('tr').find('td:eq(1)').text();
+            let supervisor = $(this).closest('tr').find('td:eq(2)').text();
+            let email = $(this).closest('tr').find('td:eq(3)').text();
+            let vehiculo = $(this).closest('tr').find('td:eq(4)').text();
+            $('#id').val(id);
+            $('#nombre').val(nombre);
+            $('#apellidos').val(apellidos);
+            $('#supervisor').val(supervisor);
+            $('#email').val(email);
+            $('#vehiculo').val(vehiculo);
+            $('#modalAltaEdicion').modal('show');
+        });
+        $('#tablaEmpleados').on('click', '.btnBorrar', function () {
+            Swal.fire({
+                title: '¿Está seguro de eliminar al empleado?',
+                text: "¡Está operación no se puede revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Borrar'
+            }).then((result) => {
+                if (result.value) {
+                    let id = $(this).closest('tr').attr('id');
+                    db.ref(`employees/${id}`).remove()
+                    Swal.fire('¡Eliminado!', 'El empleado ha sido eliminado.', 'success')
+                }
+            })
+        });
 
     </script>
 
